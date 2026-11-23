@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% block title %}Smart Disaster Management and Emergency Response System{% endblock %}
+
+{% block content %}
+<!-- ==================== HERO SECTION ==================== -->
+<section class="hero-wrapper">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-radar-glow"></div>
+
+  <div class="container position-relative" style="z-index: 2;">
+    <!-- Active Status Telemetry Pill -->
+    <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white bg-opacity-10 border border-white border-opacity-20 mb-3 backdrop-blur shadow-sm">
+      <span class="spinner-grow spinner-grow-sm text-danger" role="status"></span>
+      <span class="small fw-bold text-white tracking-wide" style="font-size: 0.8rem; letter-spacing: 0.05em;">
+        NATIONAL EMERGENCY SATELLITE TELEMETRY & AI RISK MONITORING ACTIVE
+      </span>
+    </div>
+
+    <div class="row align-items-center g-5">
+      <!-- Left Hero Text & SOS -->
+      <div class="col-lg-7">
+        <h1 class="hero-title">
+          <span class="hero-title-highlight" data-i18n="hero_title">Smart Disaster Management</span> & Rapid Emergency Response
+        </h1>
+        <p class="hero-subtitle" data-i18n="hero_subtitle">
+          AI-driven hazard risk forecasting, GIS real-time safe shelter navigation, crowdsourced incident verification, and one-touch SOS rescue coordination for citizens and first responders.
+        </p>
+
+        <!-- High-Impact Action Buttons -->
+        <div class="d-flex flex-wrap gap-3 mb-4">
+          <button class="btn btn-sos-global btn-sos-hero sos-emergency-btn shadow-lg">
+            <i class="bi bi-exclamation-octagon-fill fs-4"></i>
+            <span data-i18n="btn_sos">TRIGGER SOS EMERGENCY</span>
+          </button>
+
+          <a href="{{ url_for('main.live_map') }}" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold d-inline-flex align-items-center gap-2 backdrop-blur">
+            <i class="bi bi-geo-alt-fill text-info"></i> <span data-i18n="btn_view_map">Open Live Crisis Map</span>
+          </a>
+
+          <a href="{{ url_for('ai.ai_risk') }}" class="btn btn-info btn-lg rounded-pill px-4 fw-bold text-dark d-inline-flex align-items-center gap-2 shadow-sm">
+            <i class="bi bi-cpu-fill"></i> AI Risk Lab
+          </a>
+        </div>
+
+        <!-- Quick Helplines Strip -->
+        <div class="d-flex flex-wrap align-items-center gap-2 small text-light opacity-90">
+          <span class="fw-bold"><i class="bi bi-telephone-fill text-warning me-1"></i> Quick Dial:</span>
+          <a href="tel:112" class="badge bg-danger bg-opacity-80 text-white text-decoration-none px-2 py-1 rounded-pill">112 National Emergency</a>
+          <a href="tel:108" class="badge bg-primary bg-opacity-80 text-white text-decoration-none px-2 py-1 rounded-pill">108 Medical & Ambulance</a>
+          <a href="tel:101" class="badge bg-warning text-dark text-decoration-none px-2 py-1 rounded-pill">101 Fire & Rescue</a>
+          <a href="tel:1078" class="badge bg-info text-dark text-decoration-none px-2 py-1 rounded-pill">1078 Disaster Helpline</a>
+        </div>
+      </div>
+
+      <!-- Right Real-Time Telemetry Counters -->
+      <div class="col-lg-5">
+        <div class="card card-glass p-4 p-md-5">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-white mb-0"><i class="bi bi-activity text-danger me-2"></i> Operations Telemetry</h5>
+            <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-2 py-1 rounded-pill">Live Sync</span>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="hero-stat-card">
+                <div class="stat-value text-danger counter-animate" data-target="{{ stats.active_disasters }}">0</div>
+                <div class="stat-label">Active Alerts</div>
+                <span class="stat-badge bg-danger bg-opacity-20 text-danger">Real-Time Threat</span>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="hero-stat-card">
+                <div class="stat-value text-success counter-animate" data-target="{{ stats.available_shelters }}">0</div>
+                <div class="stat-label">Safe Shelters</div>
+                <span class="stat-badge bg-success bg-opacity-20 text-success">Verified Open</span>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="hero-stat-card">
+                <div class="stat-value text-info counter-animate" data-target="{{ stats.hospitals_count }}">0</div>
+                <div class="stat-label">Trauma Centers</div>
+                <span class="stat-badge bg-info bg-opacity-20 text-info">24/7 Triage Ready</span>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="hero-stat-card">
+                <div class="stat-value text-warning counter-animate" data-target="{{ stats.verified_reports }}">0</div>
+                <div class="stat-label">Field Reports</div>
+                <span class="stat-badge bg-warning bg-opacity-20 text-warning">Verified Live</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-top border-white border-opacity-10 text-center">
+            <a href="{{ url_for('main.report') }}" class="btn btn-outline-warning w-100 rounded-pill fw-bold">
+              <i class="bi bi-camera-fill me-2"></i> Report Ground Incident with Photo
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CRITICAL ALERT TICKER ==================== -->
+{% if critical_alerts %}
+<div class="alert-ticker-container">
+  <div class="container d-flex align-items-center">
+    <span class="alert-ticker-badge"><i class="bi bi-exclamation-triangle-fill"></i> CRITICAL ADVISORY</span>
+    <marquee behavior="scroll" direction="left" scrollamount="6" onmouseover="this.stop();" onmouseout="this.start();">
+      {% for ca in critical_alerts %}
+        <span class="me-5">
+          <strong>🚨 [{{ ca.disaster_type }} - {{ ca.location }}]:</strong> {{ ca.title }} — {{ ca.description[:120] }}...
+          <a href="{{ url_for('main.alerts') }}" class="text-white text-decoration-underline ms-2 fw-bold">View Emergency Actions →</a>
+        </span>
+      {% endfor %}
+    </marquee>
+  </div>
+</div>
+{% endif %}
+
+<!-- ==================== QUICK ESSENTIALS ACTIONS ==================== -->
+<section class="py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-custom p-4 h-100 border-top border-4 border-danger">
+          <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-circle d-inline-flex mb-3 fs-3" style="width: 60px; height: 60px; align-items: center; justify-content: center;">
+            <i class="bi bi-broadcast-pin"></i>
+          </div>
+          <h5 class="fw-bold mb-2">Live Disaster Alerts</h5>
+          <p class="text-muted small mb-3">Instant multi-hazard early warnings, cyclone tracking, and danger perimeter advisories.</p>
+          <a href="{{ url_for('main.alerts') }}" class="btn btn-sm btn-outline-danger mt-auto rounded-pill fw-bold">
+            Explore Alerts <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-custom p-4 h-100 border-top border-4 border-success">
+          <div class="bg-success bg-opacity-10 text-success p-3 rounded-circle d-inline-flex mb-3 fs-3" style="width: 60px; height: 60px; align-items: center; justify-content: center;">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <h5 class="fw-bold mb-2">Safe Shelters Finder</h5>
+          <p class="text-muted small mb-3">Locate verified evacuation camps with real-time bed capacity, clean water, and power backup.</p>
+          <a href="{{ url_for('main.shelters') }}" class="btn btn-sm btn-outline-success mt-auto rounded-pill fw-bold">
+            Find Shelters <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-custom p-4 h-100 border-top border-4 border-info">
+          <div class="bg-info bg-opacity-10 text-info p-3 rounded-circle d-inline-flex mb-3 fs-3" style="width: 60px; height: 60px; align-items: center; justify-content: center;">
+            <i class="bi bi-cpu"></i>
+          </div>
+          <h5 class="fw-bold mb-2">AI Risk Predictor</h5>
+          <p class="text-muted small mb-3">Machine Learning simulation engine computing flood, cyclone, and landslide risk probabilities.</p>
+          <a href="{{ url_for('ai.ai_risk') }}" class="btn btn-sm btn-outline-info mt-auto rounded-pill fw-bold">
+            Run Prediction <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-custom p-4 h-100 border-top border-4 border-warning">
+          <div class="bg-warning bg-opacity-10 text-warning p-3 rounded-circle d-inline-flex mb-3 fs-3" style="width: 60px; height: 60px; align-items: center; justify-content: center;">
+            <i class="bi bi-backpack4"></i>
+          </div>
+          <h5 class="fw-bold mb-2">72-Hour Go-Bag Kit</h5>
+          <p class="text-muted small mb-3">Interactive emergency checklist for family survival supplies with progress tracking.</p>
+          <a href="{{ url_for('main.preparedness') }}" class="btn btn-sm btn-outline-warning mt-auto rounded-pill fw-bold text-dark">
+            Open Go-Bag <i class="bi bi-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== DISASTER CATEGORIES GRID ==================== -->
+<section class="py-4 bg-light bg-opacity-50">
+  <div class="container">
+    <div class="text-center mb-4">
+      <h3 class="fw-bold mb-1"><i class="bi bi-grid-fill text-primary me-2"></i> Multi-Hazard Emergency Directory</h3>
+      <p class="text-muted small">Select any hazard type for tailored safety protocols, active bulletins, and relief centers.</p>
+    </div>
+
+    <div class="row g-3">
+      {% set categories = [
+        ('Flood', 'bi-water', '#0284c7', 'Floods & Inundation'),
+        ('Cyclone', 'bi-tornado', '#06b6d4', 'Cyclone & Hurricane'),
+        ('Earthquake', 'bi-activity', '#8b5cf6', 'Earthquake & Tremor'),
+        ('Tsunami', 'bi-tsunami', '#0ea5e9', 'Tsunami & Storm Surge'),
+        ('Fire', 'bi-fire', '#ef4444', 'Wildfire & Structure Fire'),
+        ('Landslide', 'bi-image-alt', '#d97706', 'Landslide & Mudslide'),
+        ('Storm', 'bi-cloud-lightning-rain', '#6366f1', 'Severe Thunderstorm'),
+        ('Industrial Accident', 'bi-radioactive', '#e11d48', 'Industrial / Chemical Hazard')
+      ] %}
+
+      {% for cat, icon, color, label in categories %}
+      <div class="col-6 col-md-3">
+        <a href="{{ url_for('main.alerts', disaster_type=cat) }}" class="text-decoration-none">
+          <div class="category-tile">
+            <div class="category-icon-box" style="background: {{ color }}15; color: {{ color }};">
+              <i class="bi {{ icon }}"></i>
+            </div>
+            <h6 class="category-title">{{ label }}</h6>
+            <span class="badge bg-secondary bg-opacity-10 text-muted small">View Active Alerts</span>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ==================== LIVE CRISIS MAP PREVIEW ==================== -->
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+      <div>
+        <h3 class="fw-bold mb-1"><i class="bi bi-map-fill text-danger me-2"></i> Real-Time GIS Disaster & Shelter Map</h3>
+        <p class="text-muted small mb-0">Live tactical tracking of danger perimeters, verified citizen incident reports, and emergency shelters.</p>
+      </div>
+      <div class="mt-3 mt-md-0 d-flex gap-2">
+        <a href="{{ url_for('main.live_map') }}" class="btn btn-primary rounded-pill px-4 fw-bold">
+          <i class="bi bi-arrows-fullscreen me-1"></i> Open Fullscreen Interactive Map
+        </a>
+      </div>
+    </div>
+
+    <div class="card card-custom p-2 shadow-lg">
+      <div id="disasterMap" style="height: 480px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== RECENT DISASTER ALERTS ==================== -->
+<section class="py-5 bg-light bg-opacity-50">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h3 class="fw-bold mb-1"><i class="bi bi-bell-fill text-danger me-2"></i> Recent Disaster Bulletins</h3>
+        <p class="text-muted small mb-0">Official advisories issued by national and regional emergency operations command.</p>
+      </div>
+      <a href="{{ url_for('main.alerts') }}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">
+        View All Alerts <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="row g-4">
+      {% for alert in recent_alerts %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card card-custom h-100 p-4 d-flex flex-column justify-content-between">
+          <div>
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span class="badge bg-secondary">{{ alert.disaster_type }}</span>
+              <span class="badge {% if alert.severity == 'Critical' %}badge-severity-critical{% elif alert.severity == 'High' %}badge-severity-high{% elif alert.severity == 'Moderate' %}badge-severity-moderate{% else %}badge-severity-low{% endif %} px-3 py-1 rounded-pill">
+                {{ alert.severity }}
+              </span>
+            </div>
+
+            <h5 class="fw-bold mb-2 text-dark">{{ alert.title }}</h5>
+            <p class="text-muted small mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ alert.location }}</p>
+            <p class="small text-secondary mb-3">{{ alert.description[:110] }}...</p>
+          </div>
+
+          <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+            <small class="text-muted">{{ alert.created_at.strftime('%d %b, %H:%M') if alert.created_at else '' }}</small>
+            <a href="{{ url_for('main.alerts') }}" class="btn btn-sm btn-outline-danger rounded-pill px-3 fw-bold">
+              View Advisory
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CIVIL DEFENSE VOLUNTEER BANNER ==================== -->
+<section class="py-5" style="background: linear-gradient(135deg, #0a192f 0%, #1e3a8a 100%); color: white;">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8">
+        <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2">COMMUNITY CIVIL DEFENSE</span>
+        <h2 class="fw-bold text-white mb-2">Join the Emergency Volunteer & First Responder Network</h2>
+        <p class="lead text-light opacity-90 mb-0">
+          Lend your skills in medical first aid, rescue boat operations, drone reconnaissance, or relief logistics to save lives during crises.
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <a href="{{ url_for('main.volunteer') }}" class="btn btn-warning btn-lg rounded-pill px-5 fw-bold text-dark shadow-lg">
+          <i class="bi bi-person-plus-fill me-2"></i> Register as Volunteer
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}

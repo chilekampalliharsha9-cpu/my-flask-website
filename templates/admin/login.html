@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Administrator Login - Smart Disaster Management System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="admin-body d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="admin-card shadow-lg p-4 p-md-5">
+        <div class="text-center mb-4">
+          <div class="bg-danger text-white p-3 rounded-circle d-inline-flex mb-2 fs-2">
+            <i class="bi bi-shield-lock"></i>
+          </div>
+          <h3 class="fw-bold text-white mb-1">Command Console</h3>
+          <p class="text-muted small">Authorized disaster management and operations personnel only.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category if category != 'error' else 'danger' }} small py-2 rounded-3 mb-3">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('admin.login') }}">
+          <div class="mb-3">
+            <label class="form-label small fw-bold text-muted">Admin Officer ID</label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-person-badge"></i></span>
+              <input type="text" class="form-control bg-dark text-white border-secondary rounded-end-3" name="username" placeholder="admin" required autofocus>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label small fw-bold text-muted">Security Key / Password</label>
+            <div class="input-group">
+              <span class="input-group-text bg-dark border-secondary text-secondary"><i class="bi bi-key"></i></span>
+              <input type="password" class="form-control bg-dark text-white border-secondary rounded-end-3" name="password" placeholder="••••••••" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 rounded-pill py-2 fw-bold shadow-sm mb-3">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Authorize & Enter Console
+          </button>
+
+          <div class="text-center mt-3">
+            <a href="{{ url_for('main.index') }}" class="text-muted small text-decoration-none">← Return to Citizen Portal</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

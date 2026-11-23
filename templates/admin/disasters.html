@@ -1,0 +1,67 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Manage Disaster Alerts - Command Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold text-white mb-1"><i class="bi bi-broadcast text-danger me-2"></i> Disaster Alerts Management</h2>
+    <p class="text-muted mb-0">Publish, modify, and broadcast official disaster warnings and multi-hazard advisories.</p>
+  </div>
+  <a href="{{ url_for('admin.create_alert') }}" class="btn btn-danger rounded-pill px-4 fw-bold shadow-sm">
+    <i class="bi bi-plus-lg me-1"></i> Issue New Disaster Alert
+  </a>
+</div>
+
+<div class="admin-card">
+  <div class="table-responsive">
+    <table class="table admin-table align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Hazard Type</th>
+          <th>Title & Location</th>
+          <th>Severity</th>
+          <th>Radius</th>
+          <th>Status</th>
+          <th>Issued Time</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for alert in alerts %}
+        <tr>
+          <td><strong>#{{ alert.id }}</strong></td>
+          <td><span class="badge bg-secondary">{{ alert.disaster_type }}</span></td>
+          <td>
+            <strong>{{ alert.title }}</strong><br>
+            <small class="text-muted"><i class="bi bi-geo-alt me-1"></i> {{ alert.location }}</small>
+          </td>
+          <td>
+            <span class="badge {% if alert.severity == 'Critical' %}badge-severity-critical{% elif alert.severity == 'High' %}badge-severity-high{% elif alert.severity == 'Moderate' %}badge-severity-moderate{% else %}badge-severity-low{% endif %} px-3 py-1 rounded-pill">
+              {{ alert.severity }}
+            </span>
+          </td>
+          <td><span class="badge bg-dark border border-secondary">{{ alert.affected_radius_km or 15 }} km</span></td>
+          <td>
+            <span class="badge {% if alert.status == 'Active' %}bg-danger{% elif alert.status == 'Watch' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+              {{ alert.status }}
+            </span>
+          </td>
+          <td class="small text-muted">{{ alert.created_at.strftime('%Y-%m-%d %H:%M') if alert.created_at else '' }}</td>
+          <td class="text-end">
+            <div class="d-inline-flex gap-2">
+              <a href="{{ url_for('admin.edit_alert', alert_id=alert.id) }}" class="btn btn-sm btn-outline-info rounded-pill px-3">
+                <i class="bi bi-pencil-square"></i> Edit
+              </a>
+              <a href="{{ url_for('admin.delete_alert', alert_id=alert.id) }}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Delete this disaster alert?');">
+                <i class="bi bi-trash"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

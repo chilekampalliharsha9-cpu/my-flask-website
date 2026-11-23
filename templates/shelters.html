@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% block title %}Safe Shelters & Evacuation Centers - Smart Disaster System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Page Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="bi bi-shield-shaded text-success me-2"></i> Safe Relief Shelters Directory</h2>
+      <p class="text-muted mb-0">Verified emergency evacuation centers with real-time bed capacity, food/water supplies, and medical facilities.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-success rounded-pill px-4" id="btnSortNearestShelters">
+        <i class="bi bi-geo-alt-fill me-1"></i> Find Nearest Safe Shelter
+      </button>
+      <a href="{{ url_for('main.live_map') }}" class="btn btn-outline-primary rounded-pill px-3">
+        <i class="bi bi-map me-1"></i> Live Map
+      </a>
+    </div>
+  </div>
+
+  <!-- Nearest Shelter Alert Banner (Populated via JS) -->
+  <div id="nearestBannerContainer" class="d-none mb-4"></div>
+
+  <!-- Search and Amenities Filter Toolbar -->
+  <div class="card card-custom p-4 mb-4">
+    <div class="row g-3 align-items-center">
+      <div class="col-md-6">
+        <label class="form-label small fw-bold text-muted mb-1">Search Shelter or City</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-pill"><i class="bi bi-search"></i></span>
+          <input type="text" id="shelterSearchInput" class="form-control border-start-0 rounded-end-pill" placeholder="Search by name, address, district...">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label small fw-bold text-muted mb-1">Filter by Available Amenities</label>
+        <div class="d-flex flex-wrap gap-2">
+          <button class="btn btn-sm btn-outline-secondary rounded-pill amenity-filter-btn active" data-filter="all">All</button>
+          <button class="btn btn-sm btn-outline-success rounded-pill amenity-filter-btn" data-filter="food"><i class="bi bi-egg-fried me-1"></i> Food</button>
+          <button class="btn btn-sm btn-outline-primary rounded-pill amenity-filter-btn" data-filter="water"><i class="bi bi-droplet-fill me-1"></i> Water</button>
+          <button class="btn btn-sm btn-outline-danger rounded-pill amenity-filter-btn" data-filter="medical"><i class="bi bi-heart-pulse-fill me-1"></i> Medical</button>
+          <button class="btn btn-sm btn-outline-warning text-dark rounded-pill amenity-filter-btn" data-filter="power"><i class="bi bi-lightning-charge-fill me-1"></i> Power</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shelters Grid -->
+  <div class="row g-4" id="sheltersGrid">
+    {% for s in shelters %}
+    <div class="col-md-6 col-lg-4 shelter-card"
+         data-name="{{ s.name|lower }}"
+         data-address="{{ s.address|lower }}"
+         data-food="{{ 'true' if s.food_available else 'false' }}"
+         data-water="{{ 'true' if s.water_available else 'false' }}"
+         data-medical="{{ 'true' if s.medical_support else 'false' }}"
+         data-power="{{ 'true' if s.power_backup else 'false' }}"
+         data-lat="{{ s.latitude }}"
+         data-lon="{{ s.longitude }}">
+      <div class="card card-custom h-100 p-4 border-top border-4 border-success">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-2 rounded-pill">
+            <i class="bi bi-shield-check me-1"></i> Safe Facility
+          </span>
+          <span class="badge bg-info text-dark rounded-pill distance-badge d-none">0.0 km</span>
+        </div>
+
+        <h5 class="fw-bold mb-2">{{ s.name }}</h5>
+        <p class="text-muted small mb-3"><i class="bi bi-geo-alt text-danger me-1"></i> {{ s.address }}</p>
+
+        <!-- Capacity and Occupancy -->
+        <div class="mb-3">
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="text-muted">Occupancy:</span>
+            <strong>{{ s.occupancy }} / {{ s.capacity }} ({{ s.occupancy_percentage }}%)</strong>
+          </div>
+          <div class="progress occupancy-progress">
+            <div class="progress-bar {% if s.occupancy_percentage > 85 %}bg-danger{% elif s.occupancy_percentage > 50 %}bg-warning{% else %}bg-success{% endif %}"
+                 style="width: {{ s.occupancy_percentage }}%;"></div>
+          </div>
+          <div class="d-flex justify-content-between small text-muted mt-1">
+            <span>Available Capacity:</span>
+            <strong class="text-success">{{ s.available_capacity }} spots</strong>
+          </div>
+        </div>
+
+        <!-- Amenities Badges -->
+        <div class="d-flex flex-wrap gap-1 mb-3">
+          <span class="amenity-badge {{ 'active' if s.food_available else '' }}">
+            <i class="bi bi-check-circle-fill"></i> Food
+          </span>
+          <span class="amenity-badge {{ 'active' if s.water_available else '' }}">
+            <i class="bi bi-check-circle-fill"></i> Clean Water
+          </span>
+          <span class="amenity-badge {{ 'active' if s.medical_support else '' }}">
+            <i class="bi bi-check-circle-fill"></i> Medical Aid
+          </span>
+          <span class="amenity-badge {{ 'active' if s.power_backup else '' }}">
+            <i class="bi bi-check-circle-fill"></i> Generator
+          </span>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="mt-auto pt-3 border-top d-flex gap-2">
+          {% if s.contact_number %}
+            <a href="tel:{{ s.contact_number }}" class="btn btn-outline-success btn-sm flex-grow-1 rounded-pill">
+              <i class="bi bi-telephone-fill me-1"></i> Call Shelter
+            </a>
+          {% endif %}
+          <a href="{{ url_for('main.live_map') }}" class="btn btn-outline-primary btn-sm rounded-pill">
+            <i class="bi bi-map"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('shelterSearchInput');
+  const filterBtns = document.querySelectorAll('.amenity-filter-btn');
+  const cards = document.querySelectorAll('.shelter-card');
+  const sortBtn = document.getElementById('btnSortNearestShelters');
+
+  let activeAmenity = 'all';
+
+  function applyFilters() {
+    const q = searchInput.value.toLowerCase().trim();
+    cards.forEach(card => {
+      const name = card.getAttribute('data-name');
+      const addr = card.getAttribute('data-address');
+      const hasFood = card.getAttribute('data-food') === 'true';
+      const hasWater = card.getAttribute('data-water') === 'true';
+      const hasMedical = card.getAttribute('data-medical') === 'true';
+      const hasPower = card.getAttribute('data-power') === 'true';
+
+      const matchText = (!q || name.includes(q) || addr.includes(q));
+      let matchAmenity = true;
+      if (activeAmenity === 'food') matchAmenity = hasFood;
+      if (activeAmenity === 'water') matchAmenity = hasWater;
+      if (activeAmenity === 'medical') matchAmenity = hasMedical;
+      if (activeAmenity === 'power') matchAmenity = hasPower;
+
+      card.style.display = (matchText && matchAmenity) ? 'block' : 'none';
+    });
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      activeAmenity = this.getAttribute('data-filter');
+      applyFilters();
+    });
+  });
+
+  // Nearest Shelter sorting via Haversine
+  sortBtn.addEventListener('click', function () {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+    sortBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Calculating Distances...';
+
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const uLat = pos.coords.latitude;
+        const uLon = pos.coords.longitude;
+
+        fetch(`/api/nearest-shelter?lat=${uLat}&lon=${uLon}&limit=20`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === 'success' && data.shelters.length > 0) {
+              const nearest = data.shelters[0];
+              const banner = document.getElementById('nearestBannerContainer');
+              banner.classList.remove('d-none');
+              banner.innerHTML = `
+                <div class="alert alert-success shadow-sm p-4 rounded-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                  <div>
+                    <span class="badge bg-success mb-1">CLOSEST EVACUATION SHELTER FOUND</span>
+                    <h4 class="fw-bold mb-1">${nearest.name}</h4>
+                    <p class="mb-0 text-muted small">${nearest.address} — <strong>${nearest.distance_km} km away</strong> (${nearest.available_capacity} spots available)</p>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <a href="tel:${nearest.contact_number}" class="btn btn-success rounded-pill px-4"><i class="bi bi-telephone-fill me-1"></i> Call Now</a>
+                    <a href="/live-map" class="btn btn-outline-success rounded-pill px-3">View Route</a>
+                  </div>
+                </div>
+              `;
+
+              // Sort cards on screen
+              const grid = document.getElementById('sheltersGrid');
+              const cardArray = Array.from(cards);
+              cardArray.sort((a, b) => {
+                const latA = parseFloat(a.getAttribute('data-lat'));
+                const lonA = parseFloat(a.getAttribute('data-lon'));
+                const latB = parseFloat(b.getAttribute('data-lat'));
+                const lonB = parseFloat(b.getAttribute('data-lon'));
+                
+                const distA = calcDist(uLat, uLon, latA, lonA);
+                const distB = calcDist(uLat, uLon, latB, lonB);
+                return distA - distB;
+              });
+
+              cardArray.forEach(c => {
+                const lat = parseFloat(c.getAttribute('data-lat'));
+                const lon = parseFloat(c.getAttribute('data-lon'));
+                const dist = calcDist(uLat, uLon, lat, lon);
+                const badge = c.querySelector('.distance-badge');
+                if (badge) {
+                  badge.textContent = `${dist.toFixed(1)} km`;
+                  badge.classList.remove('d-none');
+                }
+                grid.appendChild(c);
+              });
+            }
+            sortBtn.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Sorted by Nearest Distance';
+          });
+      },
+      err => {
+        sortBtn.innerHTML = '<i class="bi bi-geo-alt-fill me-1"></i> Find Nearest Safe Shelter';
+        alert('Could not obtain GPS location.');
+      }
+    );
+  });
+
+  function calcDist(lat1, lon1, lat2, lon2) {
+    const R = 6371.0;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+  }
+});
+</script>
+{% endblock %}

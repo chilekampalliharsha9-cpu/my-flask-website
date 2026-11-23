@@ -1,0 +1,77 @@
+/* ==========================================================================
+   ADMIN COMMAND CENTER STYLESHEET
+   Aesthetics: Deep Navy / Dark Command Operations Center
+   ========================================================================== */
+
+:root {
+  --admin-bg: #0b132b;
+  --admin-surface: #1c2541;
+  --admin-card: #1f2a48;
+  --admin-border: #3a506b;
+  --admin-primary: #48cae4;
+  --admin-accent: #00b4d8;
+  --admin-text: #e0e1dd;
+  --admin-text-muted: #8d99ae;
+}
+
+body.admin-body {
+  background-color: var(--admin-bg);
+  color: var(--admin-text);
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-sidebar {
+  background: var(--admin-surface);
+  border-right: 1px solid var(--admin-border);
+  min-height: 100vh;
+  padding: 1.5rem 1rem;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--admin-text-muted);
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-bottom: 4px;
+}
+
+.admin-nav-item:hover, .admin-nav-item.active {
+  background: rgba(72, 202, 228, 0.15);
+  color: var(--admin-primary);
+}
+
+.admin-card {
+  background: var(--admin-card);
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: var(--admin-text);
+}
+
+.admin-stat-num {
+  font-size: 2.2rem;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  color: #ffffff;
+}
+
+.admin-table {
+  color: var(--admin-text);
+  background: var(--admin-card);
+}
+
+.admin-table th {
+  background: var(--admin-surface);
+  color: var(--admin-primary);
+  border-bottom: 2px solid var(--admin-border);
+}
+
+.admin-table td {
+  border-color: var(--admin-border);
+  vertical-align: middle;
+}

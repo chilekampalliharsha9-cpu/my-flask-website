@@ -1,0 +1,98 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Issue New Disaster Alert - Command Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold text-white mb-1"><i class="bi bi-megaphone-fill text-danger me-2"></i> Issue New Disaster Alert</h2>
+    <p class="text-muted mb-0">Create and broadcast emergency hazard advisories directly to the citizen portal and live map.</p>
+  </div>
+  <a href="{{ url_for('admin.alerts') }}" class="btn btn-outline-secondary rounded-pill px-3">
+    ← Back to Alerts
+  </a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <div class="admin-card p-4 p-md-5">
+      <form method="POST" action="{{ url_for('admin.create_alert') }}">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted">Disaster Type *</label>
+            <select class="form-select bg-dark text-white border-secondary rounded-3" name="disaster_type" required>
+              <option value="Flood" selected>Flood / Inundation</option>
+              <option value="Cyclone">Cyclone / Hurricane</option>
+              <option value="Earthquake">Earthquake</option>
+              <option value="Tsunami">Tsunami</option>
+              <option value="Fire">Fire / Wildfire</option>
+              <option value="Landslide">Landslide / Mudslide</option>
+              <option value="Storm">Severe Storm / Squall</option>
+              <option value="Industrial Accident">Industrial / Chemical Hazard</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted">Severity Classification *</label>
+            <select class="form-select bg-dark text-white border-secondary rounded-3" name="severity" required>
+              <option value="Critical" selected>🚨 Critical (Extreme Danger / Evacuate)</option>
+              <option value="High">⚠️ High (Severe Threat)</option>
+              <option value="Moderate">🟡 Moderate (Watch / Elevated)</option>
+              <option value="Low">🟢 Low (Advisory)</option>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-muted">Alert Headline / Title *</label>
+            <input type="text" class="form-control bg-dark text-white border-secondary rounded-3" name="title" placeholder="e.g., Cyclone Michaung Red Alert - North Tamil Nadu Coast" required>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-muted">Affected Region / Location Name *</label>
+            <input type="text" class="form-control bg-dark text-white border-secondary rounded-3" name="location" placeholder="e.g., Chennai Coastal Corridor & Ennore Basin" required>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label small fw-bold text-muted">Center Latitude</label>
+            <input type="number" step="any" class="form-control bg-dark text-white border-secondary rounded-3" name="latitude" placeholder="13.0827" value="13.0827">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label small fw-bold text-muted">Center Longitude</label>
+            <input type="number" step="any" class="form-control bg-dark text-white border-secondary rounded-3" name="longitude" placeholder="80.2707" value="80.2707">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label small fw-bold text-muted">Danger Perimeter (km)</label>
+            <input type="number" step="any" class="form-control bg-dark text-white border-secondary rounded-3" name="affected_radius_km" value="20.0">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-muted">Full Advisory Description *</label>
+            <textarea class="form-control bg-dark text-white border-secondary rounded-3" name="description" rows="4" placeholder="Detailed meteorological data, anticipated peak landfall time, river discharge rates..." required></textarea>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-muted">Recommended Citizen Actions</label>
+            <textarea class="form-control bg-dark text-white border-secondary rounded-3" name="recommended_action" rows="2" placeholder="e.g., Evacuate to high ground, switch off main breakers, stock 72h dry food..."></textarea>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted">Alert Broadcast Status</label>
+            <select class="form-select bg-dark text-white border-secondary rounded-3" name="status">
+              <option value="Active" selected>Active Alert</option>
+              <option value="Watch">Watch Status</option>
+              <option value="Resolved">Resolved / Stand Down</option>
+            </select>
+          </div>
+
+          <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-danger btn-lg w-100 rounded-pill fw-bold shadow-sm">
+              <i class="bi bi-broadcast me-2"></i> Publish and Broadcast Alert
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

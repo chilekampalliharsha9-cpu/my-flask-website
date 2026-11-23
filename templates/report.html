@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% block title %}Report Disaster Incident - Smart Disaster System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card card-custom p-4 p-md-5">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-circle fs-2">
+            <i class="bi bi-megaphone-fill"></i>
+          </div>
+          <div>
+            <h2 class="fw-bold mb-1">Report Disaster Incident</h2>
+            <p class="text-muted mb-0">Submit ground-level emergency information. Reports are verified by operations coordinators before being pinned to the live map.</p>
+          </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('main.report') }}" enctype="multipart/form-data">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Disaster Type *</label>
+              <select class="form-select rounded-3" name="disaster_type" required>
+                <option value="Flood" selected>🌊 Flood / Inundation</option>
+                <option value="Cyclone">🌀 Cyclone / Hurricane</option>
+                <option value="Earthquake">🌋 Earthquake</option>
+                <option value="Tsunami">🌊 Tsunami</option>
+                <option value="Fire">🔥 Fire / Wildfire</option>
+                <option value="Landslide">⛰️ Landslide / Mudslide</option>
+                <option value="Storm">⛈️ Severe Storm / Squall</option>
+                <option value="Industrial Accident">☣️ Industrial / Chemical Accident</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Incident Title *</label>
+              <input type="text" class="form-control rounded-3" name="title" placeholder="e.g., Road flooded, Tree collapse blocking ambulance" required>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Location Address / Landmark *</label>
+              <div class="input-group">
+                <input type="text" class="form-control rounded-start-3" id="inputLocationName" name="location" placeholder="e.g., Near Anna Nagar West Bus Depot, Chennai" required>
+                <button type="button" class="btn btn-outline-primary" id="btnAutoGeolocate">
+                  <i class="bi bi-geo-alt-fill me-1"></i> Auto-Detect GPS
+                </button>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Latitude</label>
+              <input type="number" step="any" class="form-control rounded-3" id="inputLat" name="latitude" placeholder="e.g. 13.0827">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Longitude</label>
+              <input type="number" step="any" class="form-control rounded-3" id="inputLon" name="longitude" placeholder="e.g. 80.2707">
+            </div>
+
+            <!-- Mini Map Location Picker -->
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-pin-map-fill text-danger me-1"></i> Pinpoint Location on Map (Click to select coordinates)</span>
+                <span class="text-muted small" id="pinCoordsLabel">No point selected</span>
+              </label>
+              <div id="pickerMap" style="height: 250px; width: 100%; border-radius: 12px; border: 1px solid #cbd5e1;"></div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Detailed Description & Emergency Observations *</label>
+              <textarea class="form-control rounded-3" name="description" rows="4" placeholder="Describe the water depth, trapped individuals, blocked roads, electrical hazards, or required assistance..." required></textarea>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Attach Photo Evidence (PNG, JPG, WEBP)</label>
+              <input type="file" class="form-control rounded-3" name="image" id="inputReportImage" accept="image/*">
+              <div id="imagePreviewContainer" class="mt-2 d-none">
+                <img id="imagePreview" src="" class="img-fluid rounded border" style="max-height: 150px;">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Attach Video Evidence (MP4, MOV)</label>
+              <input type="file" class="form-control rounded-3" name="video" accept="video/*">
+            </div>
+
+            <div class="col-12 mt-4">
+              <div class="p-3 bg-light rounded-3 small text-muted mb-3">
+                <i class="bi bi-info-circle-fill text-primary me-1"></i>
+                Submitted disaster reports will initially be marked <strong>"Pending Verification"</strong>. Once checked by our verification desk, it will be highlighted on the live disaster map.
+              </div>
+
+              <button type="submit" class="btn btn-danger btn-lg w-100 rounded-pill fw-bold shadow-sm">
+                <i class="bi bi-send-fill me-2"></i> Submit Disaster Report
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const pickerMap = L.map('pickerMap').setView([13.0827, 80.2707], 11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(pickerMap);
+
+  let marker = null;
+
+  function updateCoords(lat, lon) {
+    document.getElementById('inputLat').value = lat.toFixed(5);
+    document.getElementById('inputLon').value = lon.toFixed(5);
+    document.getElementById('pinCoordsLabel').textContent = `Selected: [${lat.toFixed(5)}, ${lon.toFixed(5)}]`;
+
+    if (marker) {
+      marker.setLatLng([lat, lon]);
+    } else {
+      marker = L.marker([lat, lon], { draggable: true }).addTo(pickerMap);
+      marker.on('dragend', function (e) {
+        const pos = marker.getLatLng();
+        updateCoords(pos.lat, pos.lng);
+      });
+    }
+    pickerMap.panTo([lat, lon]);
+  }
+
+  pickerMap.on('click', function (e) {
+    updateCoords(e.latlng.lat, e.latlng.lng);
+  });
+
+  // Auto-Detect GPS Button
+  document.getElementById('btnAutoGeolocate').addEventListener('click', function () {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        updateCoords(pos.coords.latitude, pos.coords.longitude);
+      }, function (err) {
+        alert('Could not retrieve current location.');
+      });
+    }
+  });
+
+  // Image Preview
+  const imageInput = document.getElementById('inputReportImage');
+  const preview = document.getElementById('imagePreview');
+  const container = document.getElementById('imagePreviewContainer');
+  if (imageInput) {
+    imageInput.addEventListener('change', function () {
+      if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          container.classList.remove('d-none');
+        };
+        reader.readAsDataURL(this.files[0]);
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Register as an Emergency Volunteer - Smart Disaster System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card card-custom p-4 p-md-5">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="bg-warning bg-opacity-10 text-warning text-dark p-3 rounded-circle fs-2">
+            <i class="bi bi-people-fill text-warning"></i>
+          </div>
+          <div>
+            <h2 class="fw-bold mb-1">Community Disaster Volunteer Roster</h2>
+            <p class="text-muted mb-0">Join our civil defense network to support first-aid, evacuation, relief food distribution, and community assistance during major emergencies.</p>
+          </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('main.volunteer') }}">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Primary Operating District / Area *</label>
+              <input type="text" class="form-control rounded-3" name="location" placeholder="e.g. Mylapore, Chennai or Visakhapatnam Port Area" value="{{ current_user.address if current_user.is_authenticated else '' }}" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Emergency Contact Number *</label>
+              <input type="text" class="form-control rounded-3" name="contact_number" placeholder="e.g. +91 98765 43210" value="{{ current_user.phone if current_user.is_authenticated else '' }}" required>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Select Your Core Skills & Specializations *</label>
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <div class="form-check p-2 border rounded bg-light">
+                    <input class="form-check-input ms-1" type="checkbox" name="skills" value="First Aid & CPR Certified" id="skill1" checked>
+                    <label class="form-check-label ms-2 small fw-bold" for="skill1">🩺 First Aid & CPR Certified</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check p-2 border rounded bg-light">
+                    <input class="form-check-input ms-1" type="checkbox" name="skills" value="Flood Boat Rescue & Swimming" id="skill2">
+                    <label class="form-check-label ms-2 small fw-bold" for="skill2">🛶 Flood Boat Rescue & Swimming</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check p-2 border rounded bg-light">
+                    <input class="form-check-input ms-1" type="checkbox" name="skills" value="Medical & Nursing Care" id="skill3">
+                    <label class="form-check-label ms-2 small fw-bold" for="skill3">🏥 Medical / Paramedic / Nursing</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check p-2 border rounded bg-light">
+                    <input class="form-check-input ms-1" type="checkbox" name="skills" value="Food & Supply Logistics" id="skill4" checked>
+                    <label class="form-check-label ms-2 small fw-bold" for="skill4">📦 Food & Relief Supply Logistics</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check p-2 border rounded bg-light">
+                    <input class="form-check-input ms-1" type="checkbox" name="skills" value="Ham Radio / Comms Network" id="skill5">
+                    <label class="form-check-label ms-2 small fw-bold" for="skill5">📻 Radio Comms & Tech Dispatch</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-check p-2 border rounded bg-light">
+                    <input class="form-check-input ms-1" type="checkbox" name="skills" value="Debris Clearing & Physical Rescue" id="skill6">
+                    <label class="form-check-label ms-2 small fw-bold" for="skill6">🪓 Debris Clearing & Heavy Lifting</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Other Skills / Specialized Equipment Possessed</label>
+              <input type="text" class="form-control rounded-3" name="other_skills" placeholder="e.g. 4x4 Offroad vehicle, Drone operator, Inflatable raft, Power generator">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Initial Availability Status</label>
+              <select class="form-select rounded-3" name="availability">
+                <option value="Available" selected>🟢 Available for Immediate Dispatch</option>
+                <option value="Busy">🟡 Standby / Available on Notice</option>
+                <option value="Offline">⚪ Currently Offline</option>
+              </select>
+            </div>
+
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn btn-warning btn-lg w-100 rounded-pill fw-bold text-dark shadow-sm">
+                <i class="bi bi-person-check-fill me-2"></i> Register / Update Volunteer Profile
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

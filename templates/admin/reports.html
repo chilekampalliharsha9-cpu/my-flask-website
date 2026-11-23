@@ -1,0 +1,77 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Citizen Reports Verification Queue - Command Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold text-white mb-1"><i class="bi bi-patch-check-fill text-warning me-2"></i> Citizen Reports Verification Desk</h2>
+    <p class="text-muted mb-0">Verify crowdsourced incident reports. Verified reports appear immediately on the public Live Disaster Map.</p>
+  </div>
+  
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('admin.reports', status='All') }}" class="btn btn-sm btn-outline-light rounded-pill px-3 {% if current_filter == 'All' %}active{% endif %}">All</a>
+    <a href="{{ url_for('admin.reports', status='Pending Verification') }}" class="btn btn-sm btn-outline-warning rounded-pill px-3 {% if current_filter == 'Pending Verification' %}active{% endif %}">Pending Only</a>
+    <a href="{{ url_for('admin.reports', status='Verified') }}" class="btn btn-sm btn-outline-success rounded-pill px-3 {% if current_filter == 'Verified' %}active{% endif %}">Verified</a>
+  </div>
+</div>
+
+<div class="row g-4">
+  {% for rep in reports %}
+  <div class="col-lg-6">
+    <div class="admin-card h-100 p-4 border-start border-4 {% if rep.status == 'Verified' %}border-success{% elif rep.status == 'Rejected' %}border-danger{% else %}border-warning{% endif %}">
+      <div class="d-flex justify-content-between align-items-start mb-3">
+        <div>
+          <span class="badge bg-secondary">{{ rep.disaster_type }}</span>
+          <span class="badge {% if rep.status == 'Verified' %}bg-success{% elif rep.status == 'Rejected' %}bg-danger{% else %}bg-warning text-dark{% endif %} ms-1">
+            {{ rep.status }}
+          </span>
+        </div>
+        <small class="text-muted">{{ rep.created_at.strftime('%d %b, %H:%M') if rep.created_at else '' }}</small>
+      </div>
+
+      <h5 class="fw-bold text-white mb-1">{{ rep.title }}</h5>
+      <p class="text-muted small mb-3"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ rep.location }}</p>
+
+      <p class="small text-light mb-3 bg-dark p-3 rounded-3">{{ rep.description }}</p>
+
+      {% if rep.image %}
+        <div class="mb-3">
+          <label class="small text-muted fw-bold d-block mb-1">Attached Photo Evidence:</label>
+          <a href="{{ url_for('static', filename='uploads/' ~ rep.image) }}" target="_blank">
+            <img src="{{ url_for('static', filename='uploads/' ~ rep.image) }}" class="img-fluid rounded border border-secondary" style="max-height: 180px; object-fit: cover;" alt="Report evidence">
+          </a>
+        </div>
+      {% endif %}
+
+      <div class="d-flex justify-content-between align-items-center small text-muted mb-3 pt-2 border-top border-secondary border-opacity-25">
+        <span>Reporter: <strong>{{ rep.user.full_name or rep.user.username if rep.user else 'Anonymous Citizen' }}</strong></span>
+        <span>GPS: [{{ rep.latitude or 'N/A' }}, {{ rep.longitude or 'N/A' }}]</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex gap-2 mt-auto">
+        {% if rep.status != 'Verified' %}
+          <a href="{{ url_for('admin.verify_report', report_id=rep.id) }}" class="btn btn-success btn-sm flex-grow-1 rounded-pill fw-bold">
+            <i class="bi bi-check-circle-fill me-1"></i> Verify & Pin to Live Map
+          </a>
+        {% endif %}
+
+        {% if rep.status != 'Rejected' %}
+          <a href="{{ url_for('admin.reject_report', report_id=rep.id) }}" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="return confirm('Mark this incident report as false/rejected?');">
+            <i class="bi bi-x-circle me-1"></i> Reject
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% else %}
+    <div class="col-12 text-center py-5">
+      <div class="admin-card p-5">
+        <i class="bi bi-check2-all text-success fs-1 mb-2 d-block"></i>
+        <h5 class="fw-bold text-white">Verification Queue Empty</h5>
+        <p class="text-muted small">No pending citizen incident reports requiring verification at this moment.</p>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

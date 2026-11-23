@@ -1,0 +1,93 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Edit Disaster Alert #{{ alert.id }} - Command Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold text-white mb-1"><i class="bi bi-pencil-square text-info me-2"></i> Edit Disaster Alert #{{ alert.id }}</h2>
+    <p class="text-muted mb-0">Modify parameters, severity, and status of existing disaster advisory.</p>
+  </div>
+  <a href="{{ url_for('admin.alerts') }}" class="btn btn-outline-secondary rounded-pill px-3">
+    ← Back to Alerts
+  </a>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <div class="admin-card p-4 p-md-5">
+      <form method="POST" action="{{ url_for('admin.edit_alert', alert_id=alert.id) }}">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted">Disaster Type *</label>
+            <select class="form-select bg-dark text-white border-secondary rounded-3" name="disaster_type" required>
+              {% for dt in ['Flood', 'Cyclone', 'Earthquake', 'Tsunami', 'Fire', 'Landslide', 'Storm', 'Industrial Accident'] %}
+                <option value="{{ dt }}" {% if alert.disaster_type == dt %}selected{% endif %}>{{ dt }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted">Severity Classification *</label>
+            <select class="form-select bg-dark text-white border-secondary rounded-3" name="severity" required>
+              <option value="Critical" {% if alert.severity == 'Critical' %}selected{% endif %}>🚨 Critical</option>
+              <option value="High" {% if alert.severity == 'High' %}selected{% endif %}>⚠️ High</option>
+              <option value="Moderate" {% if alert.severity == 'Moderate' %}selected{% endif %}>🟡 Moderate</option>
+              <option value="Low" {% if alert.severity == 'Low' %}selected{% endif %}>🟢 Low</option>
+            </select>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-muted">Alert Headline / Title *</label>
+            <input type="text" class="form-control bg-dark text-white border-secondary rounded-3" name="title" value="{{ alert.title }}" required>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-muted">Affected Region / Location Name *</label>
+            <input type="text" class="form-control bg-dark text-white border-secondary rounded-3" name="location" value="{{ alert.location }}" required>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label small fw-bold text-muted">Center Latitude</label>
+            <input type="number" step="any" class="form-control bg-dark text-white border-secondary rounded-3" name="latitude" value="{{ alert.latitude or '' }}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label small fw-bold text-muted">Center Longitude</label>
+            <input type="number" step="any" class="form-control bg-dark text-white border-secondary rounded-3" name="longitude" value="{{ alert.longitude or '' }}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label small fw-bold text-muted">Danger Perimeter (km)</label>
+            <input type="number" step="any" class="form-control bg-dark text-white border-secondary rounded-3" name="affected_radius_km" value="{{ alert.affected_radius_km or 15.0 }}">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-muted">Full Advisory Description *</label>
+            <textarea class="form-control bg-dark text-white border-secondary rounded-3" name="description" rows="4" required>{{ alert.description }}</textarea>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label small fw-bold text-muted">Recommended Citizen Actions</label>
+            <textarea class="form-control bg-dark text-white border-secondary rounded-3" name="recommended_action" rows="2">{{ alert.recommended_action or '' }}</textarea>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label small fw-bold text-muted">Alert Broadcast Status</label>
+            <select class="form-select bg-dark text-white border-secondary rounded-3" name="status">
+              <option value="Active" {% if alert.status == 'Active' %}selected{% endif %}>Active Alert</option>
+              <option value="Watch" {% if alert.status == 'Watch' %}selected{% endif %}>Watch Status</option>
+              <option value="Resolved" {% if alert.status == 'Resolved' %}selected{% endif %}>Resolved / Stand Down</option>
+            </select>
+          </div>
+
+          <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill fw-bold shadow-sm">
+              <i class="bi bi-check2-circle me-2"></i> Update Alert Advisory
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

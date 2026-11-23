@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}Request Rescue Assistance - Smart Disaster System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card card-custom p-4 p-md-5 border-start border-5 border-danger">
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <div class="bg-danger bg-opacity-10 text-danger p-3 rounded-circle fs-2">
+            <i class="bi bi-life-preserver"></i>
+          </div>
+          <div>
+            <h2 class="fw-bold mb-1">Request Rescue Assistance</h2>
+            <p class="text-muted mb-0">Direct emergency rescue dispatch request for individuals and families stranded during disasters.</p>
+          </div>
+        </div>
+
+        <form method="POST" action="{{ url_for('main.request_rescue') }}" enctype="multipart/form-data">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Emergency Category *</label>
+              <select class="form-select rounded-3" name="emergency_type" required>
+                <option value="Flooded Residence - Boat Evacuation" selected>🌊 Flooded Residence - Boat Evacuation Needed</option>
+                <option value="Critical Medical / Oxygen / Dialysis Transport">🏥 Critical Medical / Oxygen / Dialysis Transport</option>
+                <option value="Collapsed Structure / Debris Trapped">🏚️ Collapsed Structure / Debris Trapped</option>
+                <option value="Surrounded by Fire / Smoke">🔥 Surrounded by Fire / Smoke</option>
+                <option value="Isolated without Food & Clean Water">📦 Isolated without Food & Clean Drinking Water</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Priority Classification *</label>
+              <select class="form-select rounded-3" name="priority" required>
+                <option value="Critical" selected>🚨 CRITICAL - Life Threatening (Immediate Dispatch)</option>
+                <option value="High">⚠️ HIGH - High Vulnerability / Infants / Elderly</option>
+                <option value="Normal">🟢 NORMAL - Evacuation & Supply Request</option>
+              </select>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Exact Stranded Location / Landmark *</label>
+              <div class="input-group">
+                <input type="text" class="form-control rounded-start-3" id="inputRescueLocation" name="location" placeholder="e.g. 2nd Floor, Flat 4B, River View Enclave, Velachery, Chennai" required>
+                <button type="button" class="btn btn-outline-danger" id="btnRescueGPS">
+                  <i class="bi bi-geo-alt-fill me-1"></i> Use GPS
+                </button>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold small text-muted">Latitude</label>
+              <input type="number" step="any" class="form-control rounded-3" id="inputRescueLat" name="latitude" placeholder="13.0827">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold small text-muted">Longitude</label>
+              <input type="number" step="any" class="form-control rounded-3" id="inputRescueLon" name="longitude" placeholder="80.2707">
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold small text-muted">Number of Stranded People *</label>
+              <input type="number" min="1" max="100" class="form-control rounded-3" name="people_count" value="1" required>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Detailed Situation & Special Medical Needs *</label>
+              <textarea class="form-control rounded-3" name="description" rows="4" placeholder="Mention water depth, infants, elderly, pregnant women, mobility constraints, oxygen needs, or specific medical conditions..." required></textarea>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold small text-muted">Attach Site Photo (Optional)</label>
+              <input type="file" class="form-control rounded-3" name="image" accept="image/*">
+            </div>
+
+            <div class="col-12 mt-4">
+              <div class="alert alert-danger small p-3 rounded-3 mb-3">
+                <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                For immediate life-or-death emergencies, also dial <strong>112</strong> or <strong>108</strong> directly while teams are being dispatched.
+              </div>
+
+              <button type="submit" class="btn btn-danger btn-lg w-100 rounded-pill fw-bold shadow-sm">
+                <i class="bi bi-broadcast me-2"></i> Transmit Rescue Request
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('btnRescueGPS')?.addEventListener('click', function () {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      document.getElementById('inputRescueLat').value = pos.coords.latitude.toFixed(5);
+      document.getElementById('inputRescueLon').value = pos.coords.longitude.toFixed(5);
+    }, function (err) {
+      alert('Could not obtain location.');
+    });
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,183 @@
+{
+  "default": {
+    "general": "Stay informed via local alerts, move to higher ground if water rises, keep an emergency kit ready.",
+    "flood": "Avoid walking or driving through floodwater; move to higher ground; unplug electricity if safe.",
+    "heavy_rain": "Stay indoors if possible; secure loose outdoor items; avoid low-lying areas and drainage channels.",
+    "storm": "Stay indoors; avoid open areas and tall trees; secure loose objects and stay away from windows."
+  },
+  "Andhra Pradesh": {
+    "general": "Follow local district administration guidance; be ready to move to community shelters.",
+    "flood": "Move to designated shelters on higher ground; avoid riverbanks and coastal areas.",
+    "heavy_rain": "Monitor river levels; avoid travel at night during heavy rainfall."
+  },
+  "Arunachal Pradesh": {
+    "general": "Roads and bridges may be affected; keep communication devices charged.",
+    "flood": "Stay away from landslide-prone slopes and rivers; follow evacuation orders.",
+    "heavy_rain": "Expect landslides in hilly terrain; do not camp near riverbanks."
+  },
+  "Assam": {
+    "general": "Rivers can rise rapidly; have identity and essential documents in a waterproof bag.",
+    "flood": "Move to cyclone/flood shelters; avoid crossing flooded roads.",
+    "heavy_rain": "Keep medicines and infant supplies accessible; charge phones and power banks."
+  },
+  "Bihar": {
+    "general": "Stay tuned to State Emergency Response alerts and local officials.",
+    "flood": "Move to community shelters or raised areas; avoid stepping into floodwater.",
+    "heavy_rain": "Secure livestock and valuable items on higher floors."
+  },
+  "Chhattisgarh": {
+    "general": "Watch for local advisories; make a family communication plan.",
+    "flood": "Avoid low-lying agricultural fields; do not attempt to walk through flowing water.",
+    "heavy_rain": "Beware of road washouts; drive only if necessary."
+  },
+  "Goa": {
+    "general": "Coastal areas may be affected by heavy rain and coastal flooding.",
+    "flood": "Move inland away from the coast; follow local shelter directions.",
+    "heavy_rain": "Secure boats and coastal equipment; avoid beachfronts."
+  },
+  "Gujarat": {
+    "general": "Monitor district collector updates; avoid low-lying coastal talukas during storms.",
+    "flood": "Move to safer, higher shelters; avoid driving through flooded stretches.",
+    "heavy_rain": "Be aware of urban flooding in cities; keep medicines accessible."
+  },
+  "Haryana": {
+    "general": "Follow local administration alerts and keep emergency contacts ready.",
+    "flood": "Avoid river floodplains; move to community shelters if advised.",
+    "heavy_rain": "Protect important documents and electronics from water damage."
+  },
+  "Himachal Pradesh": {
+    "general": "Landslides are a risk; avoid travel in affected zones.",
+    "flood": "Move away from rivers and stream beds; heed evacuation orders.",
+    "heavy_rain": "Watch for falling rocks and unstable slopes; do not park beneath cliffs."
+  },
+  "Jharkhand": {
+    "general": "Stay informed via local radio and officials.",
+    "flood": "Move to schools or community shelters on higher ground.",
+    "heavy_rain": "Avoid crossing swollen streams; secure livestock."
+  },
+  "Karnataka": {
+    "general": "Follow state disaster management advisories; have a basic emergency kit ready.",
+    "flood": "Avoid riverbanks and low-lying farmland; move to safer areas.",
+    "heavy_rain": "Expect urban flooding in Bengaluru and coastal areas; avoid unnecessary travel."
+  },
+  "Kerala": {
+    "general": "Keep mobile phones charged; follow district collector updates.",
+    "flood": "Move to higher floors or community shelters; do not enter floodwater.",
+    "heavy_rain": "Beware of landslides in hilly zones; heed local evacuation notices."
+  },
+  "Madhya Pradesh": {
+    "general": "Monitor local news; prepare essentials and documents in waterproof bags.",
+    "flood": "Move to community shelters; avoid flooded roads and crossings.",
+    "heavy_rain": "Secure homes and keep away from river banks."
+  },
+  "Maharashtra": {
+    "general": "Follow municipal and state alerts; prepare for possible urban flooding.",
+    "flood": "Move to higher floors or shelters; avoid low-lying suburbs in Mumbai and Konkan.",
+    "heavy_rain": "Avoid travel during intense spells; keep emergency contacts handy."
+  },
+  "Manipur": {
+    "general": "Roads may be disrupted; keep warm clothing and basic medical kit.",
+    "flood": "Move away from rivers and lowlands; follow local administration instructions.",
+    "heavy_rain": "Watch for landslides and blocked roads; avoid night travel."
+  },
+  "Meghalaya": {
+    "general": "High rainfall areas prone to flash floods and landslides.",
+    "flood": "Move to higher, safer ground quickly; avoid river valleys.",
+    "heavy_rain": "Do not use bridges or cross fast-flowing streams."
+  },
+  "Mizoram": {
+    "general": "Keep emergency supplies and stay in touch with local officials.",
+    "flood": "Move to higher ground; avoid low-lying village areas.",
+    "heavy_rain": "Watch for landslides on hilly roads."
+  },
+  "Nagaland": {
+    "general": "Expect disruptions to roads and communications.",
+    "flood": "Avoid river valleys; relocate to higher community shelters.",
+    "heavy_rain": "Avoid travel during heavy spells and monitor local warnings."
+  },
+  "Odisha": {
+    "general": "Coastal cyclones and floods are common; follow evacuation advisories.",
+    "flood": "Move to cyclone shelters or higher ground; avoid coastal and river areas.",
+    "heavy_rain": "Keep emergency kit and medicines ready; charge devices."
+  },
+  "Punjab": {
+    "general": "Stay alert to riverine flood warnings during monsoon.",
+    "flood": "Move to safe higher ground; avoid entering floodwaters.",
+    "heavy_rain": "Secure animals and property; avoid standing water."
+  },
+  "Rajasthan": {
+    "general": "Low-lying desert areas may flood unexpectedly; follow local advisories.",
+    "flood": "Avoid temporary streams and low-lying roads; seek higher ground.",
+    "heavy_rain": "Ensure drinking water is safe; avoid driving on flooded roads."
+  },
+  "Sikkim": {
+    "general": "Hilly terrain prone to landslides and flash floods.",
+    "flood": "Move away from riverbanks; follow local evacuation routes.",
+    "heavy_rain": "Avoid river crossings; do not camp near streams."
+  },
+  "Tamil Nadu": {
+    "general": "Coastal and urban flooding possible; monitor state alerts.",
+    "flood": "Move to designated shelters; avoid low-lying coastal zones.",
+    "heavy_rain": "Secure important documents and medicines; avoid travel if advised."
+  },
+  "Telangana": {
+    "general": "Watch for urban flooding in Hyderabad and riverine floods.",
+    "flood": "Move to safe shelters and higher floors; avoid floodwater.",
+    "heavy_rain": "Charge devices and have an emergency kit ready."
+  },
+  "Tripura": {
+    "general": "Monitor district alerts and be ready to move to safe locations.",
+    "flood": "Avoid low-lying areas and riverbanks; move to shelters if available.",
+    "heavy_rain": "Secure livestock and valuables; avoid night travel."
+  },
+  "Uttar Pradesh": {
+    "general": "Stay informed via local authorities during monsoon floods.",
+    "flood": "Move to higher ground or shelters; avoid flooded roads.",
+    "heavy_rain": "Keep medicines and drinking water handy; avoid walking through floodwater."
+  },
+  "Uttarakhand": {
+    "general": "Hilly and glacier-fed rivers can surge; heed warnings promptly.",
+    "flood": "Move to higher, safer ground; avoid river valleys and bridges.",
+    "heavy_rain": "Watch for landslides and roadblocks; do not stand under unstable slopes."
+  },
+  "West Bengal": {
+    "general": "Coastal and river flooding possible; follow state disaster updates.",
+    "flood": "Move inland to shelters; avoid Sundarbans and delta lowlands during surge.",
+    "heavy_rain": "Keep essential items ready and avoid flooded streets."
+  },
+  "Delhi": {
+    "general": "Urban flooding can disrupt transport; keep emergency contacts ready.",
+    "flood": "Avoid underpasses and low-lying roads; move to higher floors if necessary.",
+    "heavy_rain": "Avoid open drains and flooded areas; secure electrical appliances."
+  },
+  "Puducherry": {
+    "general": "Coastal territory — follow local advisories for storms and floods.",
+    "flood": "Move away from coastal lowlands to safer shelters.",
+    "heavy_rain": "Avoid the beach and low-lying areas during heavy rain."
+  },
+  "Chandigarh": {
+    "general": "Follow municipal advisories; urban flooding can occur in low areas.",
+    "flood": "Move to safer buildings or higher floors.",
+    "heavy_rain": "Avoid underpasses and flooded roads."
+  },
+  "Andaman and Nicobar Islands": {
+    "general": "Coastal and tsunami risks exist; follow island authority guidance.",
+    "flood": "Move inland and to higher ground immediately during surges.",
+    "heavy_rain": "Secure boats and avoid low-lying coastal zones."
+  },
+  "Lakshadweep": {
+    "general": "Small islands prone to storm surge; follow authorities for evacuation.",
+    "flood": "Move to higher ground or community shelters quickly.",
+    "heavy_rain": "Avoid coastal areas and monitor local radio."
+  },
+  "Jammu and Kashmir": {
+    "general": "Mountainous terrain with riverine and flash flood risk.",
+    "flood": "Move to safer, higher ground; avoid river valleys.",
+    "heavy_rain": "Watch for landslides; follow district administration advisories."
+  },
+  "Ladakh": {
+    "general": "High-altitude flash floods and glacial lake outburst floods are possible.",
+    "flood": "Move away from river channels and narrow valleys; follow local alerts.",
+    "heavy_rain": "Travel may be disrupted; avoid river crossings."
+  }
+}

@@ -1,0 +1,113 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Rescue Operations Coordination - Command Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold text-white mb-1"><i class="bi bi-life-preserver text-danger me-2"></i> Rescue Operations Coordination Center</h2>
+    <p class="text-muted mb-0">Dispatch available rescue units, assign field volunteers, and track real-time evacuation missions.</p>
+  </div>
+</div>
+
+<div class="admin-card">
+  <div class="table-responsive">
+    <table class="table admin-table align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Priority & Emergency</th>
+          <th>Citizen / Stranded Info</th>
+          <th>Location & GPS</th>
+          <th>Assigned Volunteer</th>
+          <th>Operation Status</th>
+          <th class="text-end">Dispatch / Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for req in requests %}
+        <tr>
+          <td><strong>#{{ req.id }}</strong></td>
+          <td>
+            <span class="badge {% if req.priority == 'Critical' %}bg-danger{% elif req.priority == 'High' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %} mb-1">
+              {{ req.priority }}
+            </span><br>
+            <strong class="text-white">{{ req.emergency_type }}</strong><br>
+            <small class="text-muted">{{ req.description[:70] }}...</small>
+          </td>
+          <td>
+            <strong>{{ req.user.full_name or req.user.username if req.user else 'Citizen' }}</strong><br>
+            <small class="text-muted"><i class="bi bi-telephone me-1"></i> {{ req.user.phone or 'N/A' }}</small><br>
+            <span class="badge bg-secondary mt-1">{{ req.people_count }} Stranded Person(s)</span>
+          </td>
+          <td>
+            <small class="text-light d-block"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ req.location }}</small>
+            {% if req.latitude and req.longitude %}
+              <small class="text-info">GPS: [{{ req.latitude|round(4) }}, {{ req.longitude|round(4) }}]</small>
+            {% endif %}
+          </td>
+          <td>
+            {% if req.assigned_volunteer %}
+              <span class="badge bg-primary"><i class="bi bi-person-fill me-1"></i> {{ req.assigned_volunteer.user_rel.full_name or 'Volunteer' }}</span><br>
+              <small class="text-muted">{{ req.assigned_volunteer.contact_number }}</small>
+            {% else %}
+              <span class="badge bg-secondary">Unassigned</span>
+            {% endif %}
+          </td>
+          <td>
+            <span class="badge {% if req.status == 'Resolved' %}bg-success{% elif req.status == 'In Progress' %}bg-primary{% elif req.status == 'Assigned' %}bg-info text-dark{% else %}bg-danger{% endif %} px-3 py-2 rounded-pill">
+              {{ req.status }}
+            </span>
+          </td>
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-warning rounded-pill px-3 fw-bold" data-bs-toggle="modal" data-bs-target="#updateRescueModal{{ req.id }}">
+              <i class="bi bi-gear-fill me-1"></i> Update
+            </button>
+          </td>
+        </tr>
+
+        <!-- Update Rescue Modal -->
+        <div class="modal fade" id="updateRescueModal{{ req.id }}" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-secondary">
+              <div class="modal-header border-secondary">
+                <h5 class="modal-title fw-bold">Update Rescue Mission #{{ req.id }}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+              </div>
+              <form method="POST" action="{{ url_for('admin.update_rescue_request', request_id=req.id) }}">
+                <div class="modal-body p-4">
+                  <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">Mission Status</label>
+                    <select class="form-select bg-dark text-white border-secondary rounded-3" name="status">
+                      <option value="Pending" {% if req.status == 'Pending' %}selected{% endif %}>Pending Dispatch</option>
+                      <option value="Assigned" {% if req.status == 'Assigned' %}selected{% endif %}>Assigned to Volunteer/Unit</option>
+                      <option value="In Progress" {% if req.status == 'In Progress' %}selected{% endif %}>In Progress / In Transit</option>
+                      <option value="Resolved" {% if req.status == 'Resolved' %}selected{% endif %}>Resolved (Evacuated / Rescued)</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted">Assign Available Volunteer</label>
+                    <select class="form-select bg-dark text-white border-secondary rounded-3" name="assigned_volunteer_id">
+                      <option value="none">-- Select Volunteer --</option>
+                      {% for v in volunteers %}
+                        <option value="{{ v.id }}" {% if req.assigned_volunteer_id == v.id %}selected{% endif %}>
+                          {{ v.user_rel.full_name or v.user_rel.username if v.user_rel else 'Volunteer' }} ({{ v.skills }})
+                        </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                  <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary rounded-pill px-4">Update Mission</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

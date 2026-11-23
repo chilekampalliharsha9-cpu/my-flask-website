@@ -1,0 +1,29 @@
+{
+  "appId": "com.smartdisasterops.app",
+  "appName": "SmartDisasterOps",
+  "webDir": "www",
+  "server": {
+    "cleartext": true,
+    "allowNavigation": [
+      "192.168.*.*",
+      "10.*.*.*",
+      "172.*.*.*",
+      "localhost",
+      "*.ngrok-free.app",
+      "*.trycloudflare.com",
+      "*.onrender.com",
+      "*"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "backgroundColor": "#07111f",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "dark",
+      "backgroundColor": "#07111f"
+    }
+  }
+}

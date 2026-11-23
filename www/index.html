@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover" />
+  <title>SmartDisasterOps Mobile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <style>
+    :root {
+      --bg-dark: #07111f;
+      --bg-card: rgba(15, 29, 50, 0.85);
+      --border-card: rgba(255, 255, 255, 0.12);
+      --accent-red: #ff334b;
+      --accent-blue: #00b4d8;
+      --accent-green: #00e676;
+      --accent-yellow: #ffb703;
+      --text-main: #f0f4f8;
+      --text-muted: #8da2bb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top right, #112845, #07111f 65%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: env(safe-area-inset-top, 16px) 16px env(safe-area-inset-bottom, 16px) 16px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 540px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    /* Header & Radar */
+    .app-header {
+      text-align: center;
+      padding: 24px 0 16px;
+      position: relative;
+    }
+
+    .radar-wrapper {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radar-pulse {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(0, 180, 216, 0.2);
+      animation: pulse 2.2s infinite ease-out;
+    }
+
+    .radar-pulse:nth-child(2) {
+      animation-delay: 0.7s;
+      background: rgba(255, 51, 75, 0.15);
+    }
+
+    .shield-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #00b4d8, #0077b6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(0, 180, 216, 0.4);
+      z-index: 2;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.7); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .app-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .app-title span {
+      color: var(--accent-blue);
+    }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: rgba(0, 230, 118, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(0, 230, 118, 0.3);
+      margin-top: 6px;
+    }
+
+    .badge-live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      animation: blink 1s infinite alternate;
+    }
+
+    @keyframes blink {
+      from { opacity: 0.3; }
+      to { opacity: 1; }
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 16px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Status indicator */
+    .status-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 14px;
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-yellow);
+    }
+
+    .status-dot.online { background: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
+    .status-dot.offline { background: var(--accent-red); box-shadow: 0 0 10px var(--accent-red); }
+    .status-dot.checking { background: var(--accent-yellow); animation: blink 0.8s infinite alternate; }
+
+    .status-text {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .status-ping {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    /* Inputs & Buttons */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .input-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-size: 14px;
+      font-family: monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .chips-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip:hover, .chip:active {
+      background: rgba(0, 180, 216, 0.2);
+      border-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: transform 0.15s, opacity 0.2s;
+      text-decoration: none;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #00b4d8, #0077b6);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(0, 180, 216, 0.35);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #00e676, #00b248);
+      color: #07111f;
+      box-shadow: 0 8px 20px rgba(0, 230, 118, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-emergency {
+      background: linear-gradient(135deg, #ff334b, #c9182b);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(255, 51, 75, 0.4);
+    }
+
+    /* Auto-connect countdown banner */
+    .countdown-bar {
+      display: none;
+      background: rgba(0, 230, 118, 0.1);
+      border: 1px solid rgba(0, 230, 118, 0.3);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: var(--accent-green);
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-cancel {
+      background: none;
+      border: none;
+      color: var(--accent-red);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Helplines strip */
+    .helplines {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .helpline-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 8px 4px;
+      text-align: center;
+      color: #fff;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .helpline-item:active {
+      background: rgba(255, 51, 75, 0.2);
+    }
+
+    .helpline-num {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent-yellow);
+      display: block;
+    }
+
+    .helpline-lbl {
+      font-size: 10px;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    .instructions {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    .instructions ol {
+      padding-left: 20px;
+      margin-top: 6px;
+    }
+
+    .instructions li {
+      margin-bottom: 4px;
+    }
+
+    .step-indicator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 14px;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .step-indicator span {
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      color: var(--text-main);
+    }
+
+    .step-indicator.active {
+      color: var(--text-main);
+    }
+
+    .step-indicator.active span {
+      background: var(--accent-blue);
+      color: #07111f;
+    }
+
+    .connection-help {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    #continueBtn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #loginStep[hidden] {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        min-width: 0;
+        padding: env(safe-area-inset-top, 10px) 10px env(safe-area-inset-bottom, 10px);
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      .app-header {
+        padding: 14px 0 10px;
+      }
+
+      .radar-wrapper {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 10px;
+      }
+
+      .shield-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        font-size: 23px;
+      }
+
+      .app-title {
+        font-size: 20px;
+      }
+
+      .card {
+        border-radius: 16px;
+        padding: 14px;
+        margin-bottom: 12px;
+      }
+
+      .status-box {
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px;
+      }
+
+      .status-ping {
+        white-space: nowrap;
+      }
+
+      .chips-row {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .chip {
+        width: 100%;
+        text-align: left;
+        overflow-wrap: anywhere;
+      }
+
+      #testBtn,
+      #connectBtn {
+        min-width: 0;
+      }
+
+      .card > div[style*="display: flex"] {
+        flex-direction: column;
+      }
+
+      .card > div[style*="display: flex"] .btn {
+        width: 100%;
+        flex: 1 1 auto !important;
+      }
+
+      .helplines {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .helpline-item {
+        min-width: 0;
+      }
+
+      .btn {
+        padding: 12px 10px;
+        font-size: 13px;
+        overflow-wrap: anywhere;
+      }
+
+      .instructions {
+        font-size: 11px;
+      }
+    }
+
+    @media (max-width: 320px) {
+      .helplines {
+        grid-template-columns: 1fr;
+      }
+
+      .app-title {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="radar-wrapper">
+        <div class="radar-pulse"></div>
+        <div class="radar-pulse"></div>
+        <div class="shield-icon">
+          <i class="bi bi-shield-shaded"></i>
+        </div>
+      </div>
+      <h1 class="app-title">SmartDisaster<span>Ops</span></h1>
+      <div class="badge-live">MOBILE CLIENT V1.0</div>
+    </header>
+
+    <div class="step-indicator active"><span>1</span> Connect to your service</div>
+    <div class="card">
+      <div class="status-box">
+        <div class="status-left">
+          <div id="statusDot" class="status-dot"></div>
+          <span id="statusLabel" class="status-text">Enter your service address</span>
+        </div>
+        <span id="pingLabel" class="status-ping">-- ms</span>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="serverInput">SERVICE ADDRESS</label>
+        <input id="serverInput" class="input-field" type="url" placeholder="https://your-service-address" spellcheck="false" autocomplete="url" />
+      </div>
+
+      <button id="testBtn" class="btn btn-primary">
+        <i class="bi bi-wifi"></i> Check connection
+      </button>
+      <p class="connection-help mt-3">Use the secure website address provided by your service. For a local server, your phone and server must be on the same Wi-Fi network.</p>
+    </div>
+
+    <div class="step-indicator" id="stepTwoLabel"><span>2</span> Sign in to your citizen account</div>
+    <div class="card" id="loginStep" hidden>
+      <div class="card-title">
+        <i class="bi bi-shield-lock-fill text-info"></i> Citizen sign-in
+      </div>
+      <p class="connection-help mb-3">Continue to the secure sign-in page and use your email address and password. Admin accounts cannot access the mobile app.</p>
+      <button id="continueBtn" class="btn btn-success" disabled>
+        <i class="bi bi-box-arrow-in-right"></i> Continue to email sign-in
+      </button>
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <div class="card-title">
+        <i class="bi bi-telephone-fill text-warning"></i> Emergency helplines
+      </div>
+      <div class="helplines">
+        <a href="tel:112" class="helpline-item">
+          <span class="helpline-num">112</span>
+          <span class="helpline-lbl">National</span>
+        </a>
+        <a href="tel:108" class="helpline-item">
+          <span class="helpline-num">108</span>
+          <span class="helpline-lbl">Ambulance</span>
+        </a>
+        <a href="tel:101" class="helpline-item">
+          <span class="helpline-num">101</span>
+          <span class="helpline-lbl">Fire</span>
+        </a>
+        <a href="tel:1078" class="helpline-item">
+          <span class="helpline-num">1078</span>
+          <span class="helpline-lbl">Disaster</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_SERVER = '';
+    const serverInput = document.getElementById('serverInput');
+    const statusDot = document.getElementById('statusDot');
+    const statusLabel = document.getElementById('statusLabel');
+    const pingLabel = document.getElementById('pingLabel');
+    const testBtn = document.getElementById('testBtn');
+    const continueBtn = document.getElementById('continueBtn');
+    const loginStep = document.getElementById('loginStep');
+    const stepTwoLabel = document.getElementById('stepTwoLabel');
+
+    // Keep the service address, but always require the user to continue to sign in.
+    const savedServer = localStorage.getItem('smart_disaster_server_url') || DEFAULT_SERVER;
+    serverInput.value = savedServer;
+
+    function sanitizeUrl(value) {
+      const input = value.trim();
+      const withProtocol = /^https?:\/\//i.test(input) ? input : `https://${input}`;
+      const parsed = new URL(withProtocol);
+      if (!['http:', 'https:'].includes(parsed.protocol) || parsed.username || parsed.password) {
+        throw new Error('Enter a valid HTTP or HTTPS service address.');
+      }
+      return parsed.origin;
+    }
+
+    function showConnectionError(message) {
+      statusDot.className = 'status-dot offline';
+      statusLabel.textContent = message;
+      pingLabel.textContent = '';
+      loginStep.hidden = true;
+      continueBtn.disabled = true;
+      stepTwoLabel.classList.remove('active');
+    }
+
+    testBtn.addEventListener('click', testConnection);
+    serverInput.addEventListener('input', () => {
+      loginStep.hidden = true;
+      continueBtn.disabled = true;
+      stepTwoLabel.classList.remove('active');
+      statusDot.className = 'status-dot';
+      statusLabel.textContent = 'Check the address to continue';
+      pingLabel.textContent = '';
+    });
+
+    continueBtn.addEventListener('click', () => {
+      try {
+        const url = sanitizeUrl(serverInput.value);
+        localStorage.setItem('smart_disaster_server_url', url);
+        window.location.href = `${url}/mobile-entry`;
+      } catch (error) {
+        showConnectionError(error.message);
+      }
+    });
+
+    async function testConnection() {
+      let url;
+      try {
+        url = sanitizeUrl(serverInput.value);
+      } catch (error) {
+        showConnectionError(error.message);
+        return;
+      }
+
+      localStorage.setItem('smart_disaster_server_url', url);
+      statusDot.className = 'status-dot checking';
+      statusLabel.textContent = 'Checking service...';
+      pingLabel.textContent = '...';
+      loginStep.hidden = true;
+      continueBtn.disabled = true;
+      stepTwoLabel.classList.remove('active');
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      const startTime = performance.now();
+      try {
+        const response = await fetch(`${url}/api/mobile-health`, {
+          method: 'GET',
+          signal: controller.signal,
+          mode: 'cors',
+          cache: 'no-store'
+        });
+        if (!response.ok) {
+          throw new Error(`Service returned an error (${response.status}).`);
+        }
+
+        statusDot.className = 'status-dot online';
+        statusLabel.textContent = 'Service connected';
+        pingLabel.textContent = `${Math.round(performance.now() - startTime)} ms`;
+        loginStep.hidden = false;
+        continueBtn.disabled = false;
+        stepTwoLabel.classList.add('active');
+      } catch (error) {
+        showConnectionError(error.name === 'AbortError'
+          ? 'Connection timed out. Check the address and network.'
+          : 'Unable to connect. Check the address and network.');
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Interactive Live Disaster & Shelter Map - Smart Disaster System{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-4 py-3">
+  <!-- Top Bar with Statistics & Controls -->
+  <div class="row align-items-center mb-3 g-3">
+    <div class="col-lg-7">
+      <div class="d-flex align-items-center gap-3">
+        <div class="bg-danger text-white p-2 rounded-circle fs-4 d-flex align-items-center justify-content-center" style="width: 46px; height: 46px;">
+          <i class="bi bi-crosshair"></i>
+        </div>
+        <div>
+          <h3 class="fw-bold mb-0" style="letter-spacing: -0.02em;">Interactive Live Crisis & Evacuation Map</h3>
+          <p class="text-muted small mb-0">Tactical GIS tracking: Danger zones, relief shelters, trauma centers, and verified ground incidents.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5 text-lg-end">
+      <div class="d-flex gap-2 justify-content-lg-end flex-wrap">
+        <button class="btn btn-primary rounded-pill px-3 fw-bold" onclick="locateUserGPS()">
+          <i class="bi bi-geo-alt-fill me-1"></i> My Location Radar
+        </button>
+        <button class="btn btn-sos-global btn-sm sos-emergency-btn">
+          <i class="bi bi-exclamation-octagon-fill"></i> SOS Dispatch
+        </button>
+        <a href="{{ url_for('main.report') }}" class="btn btn-outline-warning rounded-pill px-3 fw-bold text-dark">
+          <i class="bi bi-camera-fill me-1"></i> Report Incident
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Left Tactical Map Display -->
+    <div class="col-lg-9">
+      <div class="card card-custom p-1 shadow-lg position-relative">
+        <div id="disasterMap" style="height: 700px;"></div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar with Layer Toggles & Nearest Shelters -->
+    <div class="col-lg-3">
+      <!-- Layer Filter Card -->
+      <div class="card card-custom p-3 mb-3">
+        <h6 class="fw-bold mb-3 text-dark d-flex align-items-center justify-content-between">
+          <span><i class="bi bi-layers-fill text-primary me-2"></i> Active GIS Layers</span>
+          <span class="badge bg-primary rounded-pill">6 Active</span>
+        </h6>
+
+        <div class="d-flex flex-column gap-2 small">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="layerAlerts" checked>
+            <label class="form-check-label fw-bold text-danger" for="layerAlerts">🚨 Disaster Danger Zones</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="layerShelters" checked>
+            <label class="form-check-label fw-bold text-success" for="layerShelters">🛡️ Safe Evacuation Shelters</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="layerHospitals" checked>
+            <label class="form-check-label fw-bold text-primary" for="layerHospitals">🏥 Hospitals & Trauma Centers</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="layerPolice" checked>
+            <label class="form-check-label fw-bold text-info text-dark" for="layerPolice">👮 Police Command Posts</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="layerFire" checked>
+            <label class="form-check-label fw-bold text-warning text-dark" for="layerFire">🚒 Fire & Rescue Fleet</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="layerReports" checked>
+            <label class="form-check-label fw-bold text-secondary" for="layerReports">📍 Verified Ground Reports</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nearby Shelters Quick Jump -->
+      <div class="card card-custom p-0 overflow-hidden shadow-sm">
+        <div class="p-3 bg-success bg-opacity-10 border-bottom border-success border-opacity-25 d-flex justify-content-between align-items-center">
+          <h6 class="fw-bold mb-0 text-success"><i class="bi bi-shield-fill-check me-1"></i> Nearby Safe Shelters</h6>
+          <a href="{{ url_for('main.shelters') }}" class="small text-success text-decoration-none fw-bold">View All →</a>
+        </div>
+        <div id="mapShelterList" style="max-height: 380px; overflow-y: auto;">
+          <div class="text-center py-4 text-muted small">
+            <div class="spinner-border spinner-border-sm text-success mb-2" role="status"></div>
+            <div>Scanning nearest safe zones...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,215 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Dashboard Overview - Disaster Command Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold text-white mb-1"><i class="bi bi-speedometer2 text-primary me-2"></i> Disaster Command Center</h2>
+    <p class="text-muted mb-0">Live operations, resource telemetry, incident verification queue, and emergency response analytics.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('admin.create_alert') }}" class="btn btn-danger rounded-pill px-3 fw-bold">
+      <i class="bi bi-megaphone-fill me-1"></i> Broadcast New Alert
+    </a>
+    <a href="{{ url_for('admin.reports') }}" class="btn btn-warning text-dark rounded-pill px-3 fw-bold">
+      <i class="bi bi-patch-check-fill me-1"></i> Verify Reports ({{ stats.pending_reports }})
+    </a>
+  </div>
+</div>
+
+<!-- Key Performance Indicators (KPI) -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="admin-card text-center">
+      <div class="text-muted small fw-bold mb-1"><i class="bi bi-broadcast text-danger me-1"></i> ACTIVE DISASTERS</div>
+      <div class="admin-stat-num text-danger">{{ stats.active_disasters }}</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="admin-card text-center">
+      <div class="text-muted small fw-bold mb-1"><i class="bi bi-life-preserver text-warning me-1"></i> RESCUE MISSIONS</div>
+      <div class="admin-stat-num text-warning">{{ stats.active_rescue_requests }}</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="admin-card text-center">
+      <div class="text-muted small fw-bold mb-1"><i class="bi bi-shield-check text-success me-1"></i> SAFE SHELTERS</div>
+      <div class="admin-stat-num text-success">{{ stats.available_shelters }}</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="admin-card text-center">
+      <div class="text-muted small fw-bold mb-1"><i class="bi bi-hourglass-split text-info me-1"></i> PENDING REPORTS</div>
+      <div class="admin-stat-num text-info">{{ stats.pending_reports }}</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="admin-card text-center">
+      <div class="text-muted small fw-bold mb-1"><i class="bi bi-people text-light me-1"></i> VOLUNTEERS</div>
+      <div class="admin-stat-num text-light">{{ stats.registered_volunteers }}</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="admin-card text-center">
+      <div class="text-muted small fw-bold mb-1"><i class="bi bi-hospital text-primary me-1"></i> HOSPITALS</div>
+      <div class="admin-stat-num text-primary">{{ stats.hospitals_count }}</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="admin-card text-center">
+      <div class="text-muted small fw-bold mb-1"><i class="bi bi-patch-check text-success me-1"></i> VERIFIED REPORTS</div>
+      <div class="admin-stat-num text-success">{{ stats.verified_reports }}</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-md-3">
+    <div class="admin-card text-center">
+      <div class="text-muted small fw-bold mb-1"><i class="bi bi-person-check text-secondary me-1"></i> REGISTERED USERS</div>
+      <div class="admin-stat-num text-white">{{ stats.total_users }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- Visual Analytics Charts Row -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-4">
+    <div class="admin-card h-100">
+      <h6 class="fw-bold text-white mb-3"><i class="bi bi-pie-chart-fill text-primary me-2"></i> Disaster Types Distribution</h6>
+      <canvas id="disasterTypeChart" style="max-height: 240px;"></canvas>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="admin-card h-100">
+      <h6 class="fw-bold text-white mb-3"><i class="bi bi-life-preserver text-danger me-2"></i> Rescue Operations Status</h6>
+      <canvas id="rescueStatusChart" style="max-height: 240px;"></canvas>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="admin-card h-100">
+      <h6 class="fw-bold text-white mb-3"><i class="bi bi-bar-chart-fill text-warning me-2"></i> Monthly Incident Activity</h6>
+      <canvas id="monthlyIncidentsChart" style="max-height: 240px;"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Pending Reports Quick Action Table -->
+<div class="row g-4 mb-4">
+  <div class="col-lg-6">
+    <div class="admin-card h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-white mb-0"><i class="bi bi-patch-exclamation-fill text-warning me-2"></i> Pending Citizen Reports</h5>
+        <a href="{{ url_for('admin.reports') }}" class="btn btn-sm btn-outline-light rounded-pill">View All</a>
+      </div>
+
+      {% if recent_pending_reports %}
+        <div class="table-responsive">
+          <table class="table admin-table small">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Title / Location</th>
+                <th>Time</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for r in recent_pending_reports %}
+              <tr>
+                <td><span class="badge bg-danger">{{ r.disaster_type }}</span></td>
+                <td>
+                  <strong>{{ r.title }}</strong><br>
+                  <small class="text-muted">{{ r.location }}</small>
+                </td>
+                <td class="text-muted">{{ r.created_at.strftime('%H:%M') if r.created_at else '' }}</td>
+                <td>
+                  <div class="d-flex gap-1">
+                    <a href="{{ url_for('admin.verify_report', report_id=r.id) }}" class="btn btn-sm btn-success py-0 px-2" title="Verify & Pin to Map">Verify</a>
+                    <a href="{{ url_for('admin.reject_report', report_id=r.id) }}" class="btn btn-sm btn-danger py-0 px-2" title="Mark False / Reject">Reject</a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-center py-4 text-muted small">
+          <i class="bi bi-check-all text-success fs-3 d-block mb-1"></i>
+          All citizen reports are verified and updated.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Active Rescue Missions Quick Table -->
+  <div class="col-lg-6">
+    <div class="admin-card h-100">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-white mb-0"><i class="bi bi-life-preserver text-danger me-2"></i> Critical Rescue Missions</h5>
+        <a href="{{ url_for('admin.rescue_requests') }}" class="btn btn-sm btn-outline-light rounded-pill">Manage All</a>
+      </div>
+
+      {% if critical_rescues %}
+        <div class="table-responsive">
+          <table class="table admin-table small">
+            <thead>
+              <tr>
+                <th>Priority</th>
+                <th>Emergency / Location</th>
+                <th>People</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for req in critical_rescues %}
+              <tr>
+                <td><span class="badge {% if req.priority == 'Critical' %}bg-danger{% else %}bg-warning text-dark{% endif %}">{{ req.priority }}</span></td>
+                <td>
+                  <strong>{{ req.emergency_type }}</strong><br>
+                  <small class="text-muted">{{ req.location }}</small>
+                </td>
+                <td><span class="badge bg-secondary">{{ req.people_count }} people</span></td>
+                <td><span class="badge bg-info text-dark">{{ req.status }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="text-center py-4 text-muted small">
+          <i class="bi bi-check-circle text-success fs-3 d-block mb-1"></i>
+          No unassigned critical rescue requests.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Live Incident Operations Map on Admin Console -->
+<div class="admin-card p-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="fw-bold text-white mb-0"><i class="bi bi-crosshair text-danger me-2"></i> Live Operations Tactical Map</h5>
+    <a href="{{ url_for('main.live_map') }}" target="_blank" class="btn btn-sm btn-outline-info rounded-pill">Open Fullscreen Map ↗</a>
+  </div>
+  <div id="disasterMap" style="height: 450px; border-radius: 8px;"></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.chartDataDisasterTypes = {{ disaster_types_count | tojson }};
+  window.chartDataRescueStatus = {{ rescue_status_count | tojson }};
+  window.chartDataReportStatus = {{ report_status_count | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_charts.js') }}"></script>
+{% endblock %}

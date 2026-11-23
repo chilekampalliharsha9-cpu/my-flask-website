@@ -1,0 +1,25 @@
+{
+  "notes": [
+    {
+      "version": "v1.2.0",
+      "date": "2026-08-12",
+      "summary": "Added admin dashboard and user session tracking.",
+      "changes": [
+        "Admin dashboard toggle in header",
+        "Approximate active user count via local session heartbeats",
+        "Browser visit counter stored in localStorage",
+        "Update history list with version notes"
+      ]
+    },
+    {
+      "version": "v1.1.0",
+      "date": "2026-08-10",
+      "summary": "Improved offline support and hazard detection.",
+      "changes": [
+        "Cached API responses in localStorage",
+        "Weather hazard alerts with notification support",
+        "Service Worker registration for offline app shell"
+      ]
+    }
+  ]
+}

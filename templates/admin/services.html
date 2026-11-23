@@ -1,0 +1,198 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Manage Emergency Services - Command Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold text-white mb-1"><i class="bi bi-hospital text-primary me-2"></i> Emergency Services Directory Management</h2>
+    <p class="text-muted mb-0">Manage hospital trauma capacities, police command posts, and fire & rescue fleet assets.</p>
+  </div>
+  <button class="btn btn-primary rounded-pill px-4 fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#addFacilityModal">
+    <i class="bi bi-plus-lg me-1"></i> Register New Emergency Facility
+  </button>
+</div>
+
+<!-- Tabs for Services -->
+<ul class="nav nav-pills mb-4" id="adminServiceTabs" role="tablist">
+  <li class="nav-item">
+    <button class="nav-link active rounded-pill px-4" data-bs-toggle="pill" data-bs-target="#tabAdminHospitals">Hospitals ({{ hospitals|length }})</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link rounded-pill px-4" data-bs-toggle="pill" data-bs-target="#tabAdminPolice">Police Stations ({{ police|length }})</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link rounded-pill px-4" data-bs-toggle="pill" data-bs-target="#tabAdminFire">Fire Stations ({{ fire_stations|length }})</button>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <!-- Hospitals -->
+  <div class="tab-pane fade show active" id="tabAdminHospitals">
+    <div class="admin-card">
+      <div class="table-responsive">
+        <table class="table admin-table align-middle">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Hospital Name & Address</th>
+              <th>Available Emergency Beds</th>
+              <th>Ambulance Ready</th>
+              <th>Phone</th>
+              <th class="text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for h in hospitals %}
+            <tr>
+              <td><strong>#{{ h.id }}</strong></td>
+              <td>
+                <strong class="text-white">{{ h.name }}</strong><br>
+                <small class="text-muted">{{ h.address }}</small>
+              </td>
+              <td><span class="badge bg-success">{{ h.beds_available }} / {{ h.beds_total }} beds</span></td>
+              <td>
+                <span class="badge {{ 'bg-success' if h.ambulance_available else 'bg-secondary' }}">
+                  {{ 'Yes' if h.ambulance_available else 'No' }}
+                </span>
+              </td>
+              <td>{{ h.contact_number }}</td>
+              <td class="text-end">
+                <a href="{{ url_for('admin.delete_service', service_type='hospital', item_id=h.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Remove hospital?');">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Police Stations -->
+  <div class="tab-pane fade" id="tabAdminPolice">
+    <div class="admin-card">
+      <div class="table-responsive">
+        <table class="table admin-table align-middle">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Station Name & Address</th>
+              <th>Jurisdiction</th>
+              <th>Contact Phone</th>
+              <th class="text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in police %}
+            <tr>
+              <td><strong>#{{ p.id }}</strong></td>
+              <td>
+                <strong class="text-white">{{ p.name }}</strong><br>
+                <small class="text-muted">{{ p.address }}</small>
+              </td>
+              <td><span class="badge bg-dark border border-secondary">{{ p.jurisdiction }}</span></td>
+              <td>{{ p.contact_number }}</td>
+              <td class="text-end">
+                <a href="{{ url_for('admin.delete_service', service_type='police', item_id=p.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Remove police station?');">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fire Stations -->
+  <div class="tab-pane fade" id="tabAdminFire">
+    <div class="admin-card">
+      <div class="table-responsive">
+        <table class="table admin-table align-middle">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Station Name & Address</th>
+              <th>Rescue Boats</th>
+              <th>Fire Trucks</th>
+              <th>Contact Phone</th>
+              <th class="text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in fire_stations %}
+            <tr>
+              <td><strong>#{{ f.id }}</strong></td>
+              <td>
+                <strong class="text-white">{{ f.name }}</strong><br>
+                <small class="text-muted">{{ f.address }}</small>
+              </td>
+              <td><span class="badge bg-primary">{{ f.rescue_boats }} boats</span></td>
+              <td><span class="badge bg-warning text-dark">{{ f.fire_trucks }} trucks</span></td>
+              <td>{{ f.contact_number }}</td>
+              <td class="text-end">
+                <a href="{{ url_for('admin.delete_service', service_type='fire', item_id=f.id) }}" class="btn btn-sm btn-outline-danger rounded-pill" onclick="return confirm('Remove fire station?');">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Facility Modal -->
+<div class="modal fade" id="addFacilityModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content bg-dark text-white border-secondary">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title fw-bold">Register Emergency Facility</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="POST" action="{{ url_for('admin.services') }}">
+        <div class="modal-body p-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted">Facility Type *</label>
+              <select class="form-select bg-dark text-white border-secondary" name="service_type" id="selFacType" required>
+                <option value="Hospital" selected>Hospital / Trauma Center</option>
+                <option value="Police">Police Station</option>
+                <option value="Fire">Fire & Rescue Station</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small fw-bold text-muted">Facility Name *</label>
+              <input type="text" class="form-control bg-dark text-white border-secondary" name="name" placeholder="e.g. Metro Disaster Emergency Hospital" required>
+            </div>
+            <div class="col-12">
+              <label class="form-label small fw-bold text-muted">Address *</label>
+              <input type="text" class="form-control bg-dark text-white border-secondary" name="address" placeholder="Address, City" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold text-muted">Latitude *</label>
+              <input type="number" step="any" class="form-control bg-dark text-white border-secondary" name="latitude" placeholder="13.0827" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold text-muted">Longitude *</label>
+              <input type="number" step="any" class="form-control bg-dark text-white border-secondary" name="longitude" placeholder="80.2707" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label small fw-bold text-muted">Contact Phone *</label>
+              <input type="text" class="form-control bg-dark text-white border-secondary" name="contact_number" placeholder="+91 44 2530 0000" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-secondary">
+          <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Register Facility</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

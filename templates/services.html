@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+{% block title %}Emergency Services Directory - Smart Disaster System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="bi bi-hospital-fill text-primary me-2"></i> Emergency Services Directory</h2>
+      <p class="text-muted mb-0">Direct 24/7 contacts and operational capacities for hospitals, trauma centers, police, and fire & rescue stations.</p>
+    </div>
+    <a href="{{ url_for('main.emergency') }}" class="btn btn-danger rounded-pill px-4 fw-bold">
+      <i class="bi bi-telephone-outbound-fill me-1"></i> Emergency Hotline Central
+    </a>
+  </div>
+
+  <!-- Search & Navigation Tabs -->
+  <div class="card card-custom p-3 mb-4">
+    <div class="row g-3 align-items-center">
+      <div class="col-md-6">
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-pill"><i class="bi bi-search"></i></span>
+          <input type="text" id="serviceSearchInput" class="form-control border-start-0 rounded-end-pill" placeholder="Search hospital, police, fire station, district...">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <ul class="nav nav-pills justify-content-md-end" id="serviceTabs" role="tablist">
+          <li class="nav-item">
+            <button class="nav-link active rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#hospitalsTab">
+              <i class="bi bi-hospital me-1"></i> Hospitals ({{ hospitals|length }})
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#policeTab">
+              <i class="bi bi-shield-shaded me-1"></i> Police ({{ police|length }})
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#fireTab">
+              <i class="bi bi-fire me-1"></i> Fire & Rescue ({{ fire_stations|length }})
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="serviceTabContent">
+    <!-- Hospitals Tab -->
+    <div class="tab-pane fade show active" id="hospitalsTab">
+      <div class="row g-4" id="hospitalsGrid">
+        {% for h in hospitals %}
+        <div class="col-md-6 col-lg-4 service-card" data-text="{{ h.name|lower }} {{ h.address|lower }}">
+          <div class="card card-custom h-100 p-4 border-top border-4 border-primary">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span class="badge bg-primary bg-opacity-10 text-primary fw-bold px-3 py-2 rounded-pill">
+                <i class="bi bi-heart-pulse-fill me-1"></i> Medical Facility
+              </span>
+              {% if h.ambulance_available %}
+                <span class="badge bg-success small"><i class="bi bi-truck-front-fill me-1"></i> Ambulance Ready</span>
+              {% endif %}
+            </div>
+
+            <h5 class="fw-bold mb-2">{{ h.name }}</h5>
+            <p class="text-muted small mb-3"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ h.address }}</p>
+
+            <div class="p-3 bg-light rounded-3 mb-3 small">
+              <div class="d-flex justify-content-between mb-1">
+                <span>Total Bed Capacity:</span>
+                <strong>{{ h.beds_total }} beds</strong>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Available Emergency Beds:</span>
+                <strong class="text-success">{{ h.beds_available }} beds</strong>
+              </div>
+            </div>
+
+            <div class="mt-auto pt-2">
+              <a href="tel:{{ h.contact_number }}" class="btn btn-outline-primary btn-sm w-100 rounded-pill fw-bold">
+                <i class="bi bi-telephone-fill me-1"></i> Call {{ h.contact_number }}
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Police Tab -->
+    <div class="tab-pane fade" id="policeTab">
+      <div class="row g-4" id="policeGrid">
+        {% for p in police %}
+        <div class="col-md-6 col-lg-4 service-card" data-text="{{ p.name|lower }} {{ p.address|lower }} {{ p.jurisdiction|lower }}">
+          <div class="card card-custom h-100 p-4 border-top border-4 border-dark">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span class="badge bg-dark text-white fw-bold px-3 py-2 rounded-pill">
+                <i class="bi bi-shield-shaded me-1"></i> Police Station
+              </span>
+              <span class="badge bg-light text-dark border">{{ p.jurisdiction }}</span>
+            </div>
+
+            <h5 class="fw-bold mb-2">{{ p.name }}</h5>
+            <p class="text-muted small mb-3"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ p.address }}</p>
+
+            <div class="mt-auto pt-2">
+              <a href="tel:{{ p.contact_number }}" class="btn btn-outline-dark btn-sm w-100 rounded-pill fw-bold">
+                <i class="bi bi-telephone-fill me-1"></i> Police Control: {{ p.contact_number }}
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Fire Stations Tab -->
+    <div class="tab-pane fade" id="fireTab">
+      <div class="row g-4" id="fireGrid">
+        {% for f in fire_stations %}
+        <div class="col-md-6 col-lg-4 service-card" data-text="{{ f.name|lower }} {{ f.address|lower }}">
+          <div class="card card-custom h-100 p-4 border-top border-4 border-warning">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <span class="badge bg-warning text-dark fw-bold px-3 py-2 rounded-pill">
+                <i class="bi bi-fire me-1"></i> Fire & Water Rescue
+              </span>
+            </div>
+
+            <h5 class="fw-bold mb-2">{{ f.name }}</h5>
+            <p class="text-muted small mb-3"><i class="bi bi-geo-alt-fill text-danger me-1"></i> {{ f.address }}</p>
+
+            <div class="p-3 bg-light rounded-3 mb-3 small">
+              <div class="d-flex justify-content-between mb-1">
+                <span>Rescue Boats Available:</span>
+                <strong class="text-primary">{{ f.rescue_boats }} boats</strong>
+              </div>
+              <div class="d-flex justify-content-between">
+                <span>Fire Tenders:</span>
+                <strong>{{ f.fire_trucks }} units</strong>
+              </div>
+            </div>
+
+            <div class="mt-auto pt-2">
+              <a href="tel:{{ f.contact_number }}" class="btn btn-outline-warning text-dark btn-sm w-100 rounded-pill fw-bold">
+                <i class="bi bi-telephone-fill me-1"></i> Call Fire Station: {{ f.contact_number }}
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('serviceSearchInput');
+  const cards = document.querySelectorAll('.service-card');
+
+  searchInput.addEventListener('input', function () {
+    const q = this.value.toLowerCase().trim();
+    cards.forEach(c => {
+      const text = c.getAttribute('data-text') || '';
+      c.style.display = (!q || text.includes(q)) ? 'block' : 'none';
+    });
+  });
+});
+</script>
+{% endblock %}

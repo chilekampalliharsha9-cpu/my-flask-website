@@ -1,0 +1,59 @@
+{% extends 'admin/base_admin.html' %}
+{% block title %}Volunteer Roster - Command Center{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold text-white mb-1"><i class="bi bi-people-fill text-warning me-2"></i> Volunteer Roster & Deployment</h2>
+    <p class="text-muted mb-0">Coordinate civil defense volunteers, certified first responders, and relief teams.</p>
+  </div>
+</div>
+
+<div class="admin-card">
+  <div class="table-responsive">
+    <table class="table admin-table align-middle">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Volunteer Name</th>
+          <th>Skills & Certifications</th>
+          <th>Operating Area</th>
+          <th>Contact Phone</th>
+          <th>Deployment Status</th>
+          <th class="text-end">Update Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in volunteers %}
+        <tr>
+          <td><strong>#{{ v.id }}</strong></td>
+          <td>
+            <strong class="text-white">{{ v.user_rel.full_name or v.user_rel.username if v.user_rel else 'Volunteer' }}</strong><br>
+            <small class="text-muted">{{ v.user_rel.email if v.user_rel else '' }}</small>
+          </td>
+          <td><span class="badge bg-dark border border-secondary text-light">{{ v.skills }}</span></td>
+          <td><small class="text-light"><i class="bi bi-geo-alt me-1 text-danger"></i> {{ v.location }}</small></td>
+          <td>{{ v.contact_number }}</td>
+          <td>
+            <span class="badge {% if v.status == 'Available' %}bg-success{% elif v.status == 'Assigned' %}bg-primary{% elif v.status == 'Busy' %}bg-warning text-dark{% else %}bg-secondary{% endif %} px-3 py-2 rounded-pill">
+              {{ v.status }}
+            </span>
+          </td>
+          <td class="text-end">
+            <form method="POST" action="{{ url_for('admin.update_volunteer_status', vol_id=v.id) }}" class="d-inline-flex gap-1">
+              <select name="status" class="form-select form-select-sm bg-dark text-white border-secondary rounded-pill" style="width: 120px;">
+                <option value="Available" {% if v.status == 'Available' %}selected{% endif %}>Available</option>
+                <option value="Assigned" {% if v.status == 'Assigned' %}selected{% endif %}>Assigned</option>
+                <option value="Busy" {% if v.status == 'Busy' %}selected{% endif %}>Busy</option>
+                <option value="Offline" {% if v.status == 'Offline' %}selected{% endif %}>Offline</option>
+              </select>
+              <button type="submit" class="btn btn-sm btn-outline-info rounded-pill">Set</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

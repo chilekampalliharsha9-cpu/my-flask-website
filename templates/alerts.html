@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block title %}Disaster Alerts Dashboard - Smart Disaster System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Page Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="bi bi-broadcast text-danger me-2"></i> Disaster Alerts Dashboard</h2>
+      <p class="text-muted mb-0">Weather forecast advisories and emergency warnings from disaster management authorities.</p>
+    </div>
+    <a href="{{ url_for('main.live_map') }}" class="btn btn-primary rounded-pill px-4">
+      <i class="bi bi-map-fill me-1"></i> View on Live Map
+    </a>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div class="card card-custom p-4 mb-4">
+    <form method="GET" action="{{ url_for('main.alerts') }}" id="alertFilterForm" class="row g-3 align-items-center">
+      <div class="col-md-3">
+        <label class="form-label small fw-bold text-muted mb-1">Disaster Category</label>
+        <select class="form-select rounded-pill" name="category" id="filterCategory">
+          <option value="All" {% if selected_category == 'All' or not selected_category %}selected{% endif %}>All Hazards</option>
+          <option value="Flood" {% if selected_category == 'Flood' %}selected{% endif %}>Flood</option>
+          <option value="Cyclone" {% if selected_category == 'Cyclone' %}selected{% endif %}>Cyclone</option>
+          <option value="Earthquake" {% if selected_category == 'Earthquake' %}selected{% endif %}>Earthquake</option>
+          <option value="Tsunami" {% if selected_category == 'Tsunami' %}selected{% endif %}>Tsunami</option>
+          <option value="Fire" {% if selected_category == 'Fire' %}selected{% endif %}>Fire</option>
+          <option value="Landslide" {% if selected_category == 'Landslide' %}selected{% endif %}>Landslide</option>
+          <option value="Storm" {% if selected_category == 'Storm' %}selected{% endif %}>Storm</option>
+          <option value="Industrial Accident" {% if selected_category == 'Industrial Accident' %}selected{% endif %}>Industrial Accident</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label small fw-bold text-muted mb-1">Severity Level</label>
+        <select class="form-select rounded-pill" name="severity" id="filterSeverity">
+          <option value="All" {% if selected_severity == 'All' or not selected_severity %}selected{% endif %}>All Severities</option>
+          <option value="Critical" {% if selected_severity == 'Critical' %}selected{% endif %}>Critical</option>
+          <option value="High" {% if selected_severity == 'High' %}selected{% endif %}>High</option>
+          <option value="Moderate" {% if selected_severity == 'Moderate' %}selected{% endif %}>Moderate</option>
+          <option value="Low" {% if selected_severity == 'Low' %}selected{% endif %}>Low</option>
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label small fw-bold text-muted mb-1">Search Keyword / Location</label>
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 rounded-start-pill"><i class="bi bi-search"></i></span>
+          <input type="text" class="form-control border-start-0 rounded-end-pill" name="search" id="filterSearch" placeholder="Search city, title, advice..." value="{{ search_query or '' }}">
+        </div>
+      </div>
+
+      <div class="col-md-2 d-flex gap-2 align-items-end">
+        <button type="submit" class="btn btn-primary rounded-pill w-100 mt-md-4">Filter</button>
+        <a href="{{ url_for('main.alerts') }}" class="btn btn-outline-secondary rounded-pill mt-md-4"><i class="bi bi-arrow-counterclockwise"></i></a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Alerts List Grid -->
+  <div class="row g-4" id="alertsContainer">
+    {% if alerts %}
+      {% for alert in alerts %}
+      <div class="col-md-6 disaster-alert-card" data-category="{{ alert.disaster_type }}" data-severity="{{ alert.severity }}">
+        <div class="card card-custom h-100 p-4 border-start border-5 {% if alert.severity == 'Critical' %}border-danger{% elif alert.severity == 'High' %}border-warning{% elif alert.severity == 'Moderate' %}border-info{% else %}border-success{% endif %}">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <span class="badge {% if alert.severity == 'Critical' %}badge-severity-critical{% elif alert.severity == 'High' %}badge-severity-high{% elif alert.severity == 'Moderate' %}badge-severity-moderate{% else %}badge-severity-low{% endif %} px-3 py-2 rounded-pill me-2">
+                {{ alert.severity }}
+              </span>
+              <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-bold">
+                {{ alert.disaster_type }}
+              </span>
+            </div>
+            <div class="text-end">
+              <span class="badge {% if alert.status == 'Active' %}bg-danger{% elif alert.status == 'Watch' %}bg-warning text-dark{% else %}bg-secondary{% endif %} rounded-pill">
+                {{ alert.status }}
+              </span>
+              <div class="text-muted small mt-1"><i class="bi bi-clock me-1"></i> {{ alert.created_at.strftime('%Y-%m-%d %H:%M') if alert.created_at else 'Active' }}</div>
+            </div>
+          </div>
+
+          <h4 class="fw-bold mb-2">{{ alert.title }}</h4>
+          <p class="text-muted mb-3">{{ alert.description }}</p>
+
+          <div class="p-3 bg-light rounded-3 mb-3">
+            <div class="row g-2 small">
+              <div class="col-sm-6">
+                <strong><i class="bi bi-geo-alt-fill text-danger me-1"></i> Affected Zone:</strong><br>
+                {{ alert.location }}
+              </div>
+              <div class="col-sm-6">
+                <strong><i class="bi bi-compass text-primary me-1"></i> Danger Perimeter:</strong><br>
+                Approx. {{ alert.affected_radius_km or 15 }} km radius
+              </div>
+            </div>
+            {% if alert.recommended_action %}
+              <div class="mt-2 pt-2 border-top">
+                <strong class="text-danger"><i class="bi bi-shield-check me-1"></i> Recommended Action:</strong>
+                <p class="mb-0 text-dark small mt-1">{{ alert.recommended_action }}</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-auto">
+            <small class="text-muted">{% if alert.title.startswith('Weather forecast:') %}Automated weather forecast advisory{% else %}Issued by Disaster Response Authority{% endif %}</small>
+            <a href="{{ url_for('main.live_map') }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+              <i class="bi bi-crosshair me-1"></i> View on Live Map
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="col-12 text-center py-5">
+        <div class="card card-custom p-5">
+          <i class="bi bi-shield-check text-success fs-1 mb-3"></i>
+          <h4 class="fw-bold">No Active Alerts Matching Criteria</h4>
+          <p class="text-muted">All environmental hazard metrics in the selected category are currently in the normal safe range.</p>
+          <div><a href="{{ url_for('main.alerts') }}" class="btn btn-outline-primary rounded-pill px-4">Reset Filters</a></div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/alerts.js') }}"></script>
+{% endblock %}

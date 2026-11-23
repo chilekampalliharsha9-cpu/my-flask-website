@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>{% block title %}Smart Disaster Management & Emergency Response System{% endblock %}</title>
+  
+  <!-- Google Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <!-- Bootstrap 5 & Leaflet CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Custom Modern CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body{% if session.get('mobile_app') %} class="mobile-app-shell"{% endif %}>
+
+  <!-- Language Selector -->
+  <div class="language-bar">
+    <div class="container-fluid px-lg-4 d-flex justify-content-end">
+      <div class="dropdown">
+        <button class="btn btn-sm dropdown-toggle rounded-pill px-3" type="button" data-bs-toggle="dropdown" id="currentLangLabel">
+          <i class="bi bi-translate me-1"></i> English
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+          <li><a class="dropdown-item lang-select-item" href="#" data-lang="en">🇬🇧 English</a></li>
+          <li><a class="dropdown-item lang-select-item" href="#" data-lang="ta">🇮🇳 தமிழ் (Tamil)</a></li>
+          <li><a class="dropdown-item lang-select-item" href="#" data-lang="te">🇮🇳 తెలుగు (Telugu)</a></li>
+          <li><a class="dropdown-item lang-select-item" href="#" data-lang="hi">🇮🇳 हिन्दी (Hindi)</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-xl navbar-dark navbar-custom">
+    <div class="container-fluid px-lg-4">
+      <a class="navbar-brand fw-bold" href="{{ url_for('main.index') }}">
+        <div class="brand-icon-wrapper">
+          <i class="bi bi-shield-shaded text-white fs-4"></i>
+        </div>
+        <div>
+          <span>SmartDisaster<span class="text-info">Ops</span></span>
+          <span class="brand-badge ms-1">LIVE</span>
+        </div>
+      </a>
+
+      <!-- Large Emergency SOS Trigger (Always in Mobile Header) -->
+      <button class="btn btn-sos-global btn-sm d-xl-none ms-auto me-2 sos-emergency-btn">
+        <i class="bi bi-exclamation-octagon-fill"></i> SOS
+      </button>
+      <a href="{{ url_for('download_apk') }}" class="btn btn-outline-light btn-sm d-xl-none rounded-pill me-2">
+        <i class="bi bi-phone-fill"></i> APK
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <ul class="navbar-nav me-auto mb-2 mb-xl-0 ms-xl-3">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}" data-i18n="nav_home"><i class="bi bi-house-door"></i> Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.alerts') }}" data-i18n="nav_alerts"><i class="bi bi-broadcast"></i> Disaster Alerts</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.live_map') }}" data-i18n="nav_map"><i class="bi bi-map"></i> Live Map</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.report') }}" data-i18n="nav_report"><i class="bi bi-megaphone"></i> Report Disaster</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.shelters') }}" data-i18n="nav_shelters"><i class="bi bi-shield-check"></i> Safe Shelters</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.services') }}" data-i18n="nav_services"><i class="bi bi-hospital"></i> Services</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('ai.ai_risk') }}" data-i18n="nav_ai_risk"><i class="bi bi-cpu"></i> AI Predictor</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.weather') }}" data-i18n="nav_weather"><i class="bi bi-cloud-sun"></i> Weather</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.preparedness') }}" data-i18n="nav_preparedness"><i class="bi bi-book"></i> Preparedness</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.volunteer') }}" data-i18n="nav_volunteer"><i class="bi bi-people"></i> Volunteer</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2 mt-3 mt-xl-0 flex-wrap">
+          <a href="{{ url_for('download_apk') }}" class="btn btn-outline-light btn-sm rounded-pill px-3 d-none d-xl-inline-flex align-items-center">
+            <i class="bi bi-download me-1"></i> Download APK
+          </a>
+
+          <!-- SOS Emergency Trigger -->
+          <button class="btn btn-sos-global d-none d-xl-inline-flex sos-emergency-btn">
+            <i class="bi bi-exclamation-octagon-fill"></i> <span data-i18n="btn_sos">SOS EMERGENCY</span>
+          </button>
+
+          <!-- Notification Center Bell -->
+          <div class="dropdown" id="notifBellDropdown">
+            <button class="btn btn-outline-light btn-sm position-relative rounded-circle p-2" data-bs-toggle="dropdown" aria-expanded="false" title="Emergency Notifications">
+              <i class="bi bi-bell-fill"></i>
+              <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">0</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow-lg" id="notifDropdownList" style="min-width: 320px; max-height: 420px; overflow-y: auto;">
+              <li class="dropdown-header fw-bold text-dark d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-broadcast text-danger me-1"></i> Live Notifications</span>
+                <span class="badge bg-danger rounded-pill">Active</span>
+              </li>
+              <li><div class="dropdown-item small text-muted">No unread alerts at this time.</div></li>
+            </ul>
+          </div>
+
+          <!-- Light / Dark Theme Switcher -->
+          <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Dark/Light Mode">
+            <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+          </button>
+
+          <!-- User Authentication Links -->
+          {% if current_user.is_authenticated and not current_user.is_admin %}
+            <div class="dropdown">
+              <button class="btn btn-primary btn-sm dropdown-toggle rounded-pill px-3 fw-bold" data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle me-1"></i> {{ current_user.full_name or current_user.username }}
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                <li><a class="dropdown-item" href="{{ url_for('auth.profile') }}"><i class="bi bi-person me-2"></i> <span data-i18n="nav_profile">My Profile</span></a></li>
+                <li><a class="dropdown-item" href="{{ url_for('main.user_reports') }}"><i class="bi bi-journal-text me-2"></i> <span data-i18n="nav_my_reports">My Reports</span></a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger fw-bold" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right me-2"></i> <span data-i18n="nav_logout">Logout</span></a></li>
+              </ul>
+            </div>
+          {% elif current_user.is_authenticated and current_user.is_admin and not session.get('mobile_app') %}
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-warning btn-sm rounded-pill fw-bold text-dark">
+              <i class="bi bi-speedometer2 me-1"></i> Admin Command
+            </a>
+          {% else %}
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-sm rounded-pill px-3" data-i18n="nav_login">Citizen Login</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-info btn-sm rounded-pill px-3 fw-bold text-dark" data-i18n="nav_register">Register</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Notification Messages -->
+  <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show shadow-sm rounded-4" role="alert">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+              <div>{{ message }}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if content_error %}
+      <div class="alert alert-danger p-4 text-center rounded-4 shadow-sm my-5">
+        <h4 class="fw-bold"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Notice</h4>
+        <p class="mb-3 lead">{{ content_error }}</p>
+        <a href="{{ url_for('main.index') }}" class="btn btn-primary px-4 rounded-pill">Return to Home</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Main Content Area -->
+  <main class="flex-grow-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row g-4 mb-4">
+        <div class="col-lg-4">
+          <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="bi bi-shield-check text-info"></i> Smart Disaster Management
+          </h5>
+          <p class="small text-muted mb-3">
+            Real-time multi-hazard alerting, AI-powered predictive risk evaluation, interactive GIS shelter routing, and rapid emergency rescue coordination.
+          </p>
+          <div class="d-flex gap-2">
+            <span class="badge bg-danger py-2 px-3"><i class="bi bi-telephone-fill me-1"></i> Helpline: 112 / 1078</span>
+            <span class="badge bg-success py-2 px-3"><i class="bi bi-check-circle-fill me-1"></i> System Active</span>
+          </div>
+        </div>
+
+        <div class="col-6 col-lg-2">
+          <h6 class="text-white fw-bold mb-3">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="{{ url_for('main.alerts') }}">Disaster Alerts</a></li>
+            <li class="mb-2"><a href="{{ url_for('main.live_map') }}">Interactive Live Map</a></li>
+            <li class="mb-2"><a href="{{ url_for('main.shelters') }}">Safe Shelters Finder</a></li>
+            <li class="mb-2"><a href="{{ url_for('main.report') }}">Report an Incident</a></li>
+            <li class="mb-2"><a href="{{ url_for('ai.ai_risk') }}">AI Risk Predictor</a></li>
+          </ul>
+        </div>
+
+        <div class="col-6 col-lg-3">
+          <h6 class="text-white fw-bold mb-3">Emergency Helplines (India)</h6>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><strong class="text-light">112:</strong> National Emergency Number</li>
+            <li class="mb-2"><strong class="text-light">108:</strong> Medical & Ambulance</li>
+            <li class="mb-2"><strong class="text-light">101:</strong> Fire & Water Rescue</li>
+            <li class="mb-2"><strong class="text-light">100:</strong> Police Control Room</li>
+            <li class="mb-2"><strong class="text-light">1078:</strong> National Disaster Helpline</li>
+          </ul>
+        </div>
+
+        <div class="col-lg-3">
+          <h6 class="text-white fw-bold mb-3">Need Immediate Rescue?</h6>
+          <p class="small text-muted mb-3">Trigger an immediate geo-located rescue signal or contact emergency volunteers.</p>
+          <button class="btn btn-sos-global w-100 justify-content-center sos-emergency-btn mb-2">
+            <i class="bi bi-exclamation-octagon-fill"></i> Trigger SOS Emergency
+          </button>
+          <a href="{{ url_for('main.request_rescue') }}" class="btn btn-outline-light btn-sm w-100">Submit Rescue Request</a>
+        </div>
+      </div>
+
+      <hr class="border-secondary opacity-25">
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-muted">
+        <div data-i18n="footer_text">
+          © 2026 Smart Disaster Management and Emergency Response System. Powered by AI, Cloud Computing & Real-Time Location Services.
+        </div>
+        <div class="mt-2 mt-md-0">
+          <a href="{{ url_for('main.preparedness') }}" class="me-3">Safety Guidelines</a>
+          <a href="{{ url_for('auth.login') }}">Citizen Portal</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Core Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='js/translations.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% block title %}Emergency Preparedness & Survival Guides - Smart Disaster System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="bi bi-book-half text-primary me-2"></i> Disaster Preparedness & Safety Guide</h2>
+      <p class="text-muted mb-0">Actionable phase-by-phase survival instructions and an interactive emergency kit checklist.</p>
+    </div>
+    <a href="{{ url_for('main.shelters') }}" class="btn btn-outline-success rounded-pill px-4">
+      <i class="bi bi-shield-shaded me-1"></i> Locate Nearest Shelters
+    </a>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Multi-Hazard Guides -->
+    <div class="col-lg-8">
+      <!-- Hazard Selection Tabs -->
+      <ul class="nav nav-pills mb-4 p-2 bg-white rounded-pill shadow-sm d-flex flex-wrap gap-1" id="hazardTabs" role="tablist">
+        <li class="nav-item">
+          <button class="nav-link active rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#tabFlood">🌊 Flood</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#tabCyclone">🌀 Cyclone</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#tabEarthquake">🌋 Earthquake</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#tabFire">🔥 Fire</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#tabTsunami">🌊 Tsunami</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link rounded-pill px-3" data-bs-toggle="pill" data-bs-target="#tabLandslide">⛰️ Landslide</button>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="hazardTabContent">
+        <!-- FLOOD GUIDE -->
+        <div class="tab-pane fade show active" id="tabFlood">
+          <div class="card card-custom p-4 p-md-5">
+            <h3 class="fw-bold mb-3 text-primary"><i class="bi bi-water me-2"></i> Flood Safety & Inundation Protocol</h3>
+            
+            <div class="mb-4">
+              <h5 class="fw-bold text-success"><i class="bi bi-check-circle me-1"></i> BEFORE A FLOOD (Preparation Phase)</h5>
+              <ul class="text-muted small">
+                <li class="mb-2">Know your area's flood risk level and nearest elevated relief shelter locations.</li>
+                <li class="mb-2">Elevate critical electrical panels, water heaters, and home appliances above flood base level.</li>
+                <li class="mb-2">Keep identity documents (Aadhaar, passports, insurance papers) in a sealed waterproof pouch.</li>
+                <li class="mb-2">Clear household drains and gutters of debris to prevent localized pooling.</li>
+              </ul>
+            </div>
+
+            <div class="mb-4">
+              <h5 class="fw-bold text-danger"><i class="bi bi-exclamation-triangle me-1"></i> DURING A FLOOD (Action Phase)</h5>
+              <ul class="text-muted small">
+                <li class="mb-2">Turn off the main electrical circuit breaker and gas valve before leaving the premises.</li>
+                <li class="mb-2"><strong>Never walk or drive through moving flood water:</strong> 6 inches of rapid water can knock an adult down; 2 feet of water will float a car.</li>
+                <li class="mb-2">Move family and pets to upper floors or designated high-ground community camps.</li>
+                <li class="mb-2">Do not touch wet electrical switches or fallen power lines.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 class="fw-bold text-info"><i class="bi bi-arrow-repeat me-1"></i> AFTER A FLOOD (Recovery Phase)</h5>
+              <ul class="text-muted small">
+                <li class="mb-2">Return home only after emergency officials declare the area structurally safe.</li>
+                <li class="mb-2">Boil all drinking water for at least 1 minute or use certified purification tablets.</li>
+                <li class="mb-2">Watch out for snakes, scorpions, and rodents that may have taken refuge in dry parts of the building.</li>
+                <li class="mb-2">Photograph water damage before beginning cleanup for insurance and relief documentation.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- CYCLONE GUIDE -->
+        <div class="tab-pane fade" id="tabCyclone">
+          <div class="card card-custom p-4 p-md-5">
+            <h3 class="fw-bold mb-3 text-danger"><i class="bi bi-tornado me-2"></i> Cyclone & Severe Storm Protocol</h3>
+            
+            <div class="mb-4">
+              <h5 class="fw-bold text-success"><i class="bi bi-check-circle me-1"></i> BEFORE A CYCLONE</h5>
+              <ul class="text-muted small">
+                <li class="mb-2">Check house roofs, trim overgrown tree branches overhanging power lines or roof tiles.</li>
+                <li class="mb-2">Store at least 72 hours of non-perishable food, water, battery torches, and power banks.</li>
+                <li class="mb-2">Tape large glass windows with crossed adhesive tape to prevent flying glass splinters.</li>
+              </ul>
+            </div>
+
+            <div class="mb-4">
+              <h5 class="fw-bold text-danger"><i class="bi bi-exclamation-triangle me-1"></i> DURING A CYCLONE</h5>
+              <ul class="text-muted small">
+                <li class="mb-2">Remain indoors in the strongest, windowless central room of the building.</li>
+                <li class="mb-2"><strong>Beware of the Eye of the Storm:</strong> If winds suddenly calm down, do NOT go outside; gale winds will resume violently from the opposite direction.</li>
+                <li class="mb-2">Disconnect electrical appliances to avoid storm power surges.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 class="fw-bold text-info"><i class="bi bi-arrow-repeat me-1"></i> AFTER A CYCLONE</h5>
+              <ul class="text-muted small">
+                <li class="mb-2">Beware of loose live wires hanging from broken electricity poles.</li>
+                <li class="mb-2">Clear stagnant water around living quarters to prevent mosquito-borne epidemics (Dengue/Malaria).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- EARTHQUAKE GUIDE -->
+        <div class="tab-pane fade" id="tabEarthquake">
+          <div class="card card-custom p-4 p-md-5">
+            <h3 class="fw-bold mb-3 text-warning text-dark"><i class="bi bi-activity me-2"></i> Earthquake Safety Protocol</h3>
+            
+            <div class="mb-4">
+              <h5 class="fw-bold text-danger"><i class="bi bi-shield-shaded me-1"></i> DURING THE SHAKING: DROP, COVER, AND HOLD ON</h5>
+              <ul class="text-muted small">
+                <li class="mb-2"><strong>DROP</strong> down onto your hands and knees.</li>
+                <li class="mb-2"><strong>COVER</strong> your head and neck under a sturdy table or desk.</li>
+                <li class="mb-2"><strong>HOLD ON</strong> to your shelter until the shaking stops.</li>
+                <li class="mb-2">If outdoors, move into an open area away from power lines, tall buildings, and glass facades.</li>
+                <li class="mb-2">Do NOT use elevators during or immediately after an earthquake.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 class="fw-bold text-info"><i class="bi bi-check-circle me-1"></i> AFTER THE QUAKE</h5>
+              <ul class="text-muted small">
+                <li class="mb-2">Expect aftershocks. Be prepared to Drop, Cover, and Hold On again.</li>
+                <li class="mb-2">Check for gas leaks. If you smell gas, turn off the main valve and evacuate immediately.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- FIRE GUIDE -->
+        <div class="tab-pane fade" id="tabFire">
+          <div class="card card-custom p-4 p-md-5">
+            <h3 class="fw-bold mb-3 text-danger"><i class="bi bi-fire me-2"></i> Fire Safety & Evacuation</h3>
+            
+            <div class="mb-4">
+              <h5 class="fw-bold text-danger"><i class="bi bi-exclamation-triangle me-1"></i> IN CASE OF STRUCTURAL FIRE</h5>
+              <ul class="text-muted small">
+                <li class="mb-2"><strong>Crawl Low in Smoke:</strong> Smoke rises to the ceiling; clean breathable air is 1-2 feet above the floor.</li>
+                <li class="mb-2">Feel door handles with the back of your hand before opening. If hot, do not open—use an alternate route.</li>
+                <li class="mb-2">If your clothing catches fire: <strong>STOP, DROP, AND ROLL</strong> until flames are smothered.</li>
+                <li class="mb-2">Call 101 or 112 immediately once you are outside in a safe zone.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- TSUNAMI GUIDE -->
+        <div class="tab-pane fade" id="tabTsunami">
+          <div class="card card-custom p-4 p-md-5">
+            <h3 class="fw-bold mb-3 text-primary"><i class="bi bi-tsunami me-2"></i> Tsunami Coastal Safety</h3>
+            
+            <div class="mb-4">
+              <h5 class="fw-bold text-danger"><i class="bi bi-exclamation-triangle me-1"></i> CRITICAL WARNING SIGNS</h5>
+              <ul class="text-muted small">
+                <li class="mb-2">Strong earthquake felt along the coast.</li>
+                <li class="mb-2">Rapid, unusual recession of ocean waters exposing the sea floor.</li>
+                <li class="mb-2">Loud roaring sound from the ocean resembling a freight train or jet aircraft.</li>
+                <li class="mb-2"><strong>Action:</strong> Immediately move at least 2 kilometers inland or 30 meters above sea level to high ground or multi-story concrete structures.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- LANDSLIDE GUIDE -->
+        <div class="tab-pane fade" id="tabLandslide">
+          <div class="card card-custom p-4 p-md-5">
+            <h3 class="fw-bold mb-3 text-secondary"><i class="bi bi-terrain me-2"></i> Landslide & Mudflow Safety</h3>
+            
+            <div class="mb-4">
+              <h5 class="fw-bold text-warning"><i class="bi bi-exclamation-triangle me-1"></i> WARNING SIGNS & ACTION</h5>
+              <ul class="text-muted small">
+                <li class="mb-2">Springs or water seepage breaking through ground in new locations.</li>
+                <li class="mb-2">Cracks appearing in building foundations, retaining walls, or pavements.</li>
+                <li class="mb-2">Faint rumbling sounds that increase in volume as landslide approaches.</li>
+                <li class="mb-2">Evacuate steep slope settlements immediately during persistent torrential rains.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Emergency Kit Checklist -->
+    <div class="col-lg-4">
+      <div class="card card-custom p-4 sticky-top" style="top: 90px;">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-0"><i class="bi bi-backpack-fill text-danger me-2"></i> Emergency Go-Bag Kit</h5>
+        </div>
+        <p class="text-muted small mb-3">Interactive checklist for a 72-hour family emergency survival pack.</p>
+
+        <!-- Progress Tracker -->
+        <div class="mb-3">
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="text-muted">Pack Readiness:</span>
+            <strong class="text-success" id="kitProgressLabel">0% Ready</strong>
+          </div>
+          <div class="progress" style="height: 8px;">
+            <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" id="kitProgressBar" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- Checklist Items -->
+        <div id="emergencyChecklistContainer">
+          <div class="checklist-item">
+            <input type="checkbox" class="form-check-input me-2">
+            <div>
+              <strong>Drinking Water</strong>
+              <div class="text-muted" style="font-size: 0.75rem;">3 Liters per person per day (3-day supply)</div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <input type="checkbox" class="form-check-input me-2">
+            <div>
+              <strong>First-Aid Kit & Medicines</strong>
+              <div class="text-muted" style="font-size: 0.75rem;">Bandages, antiseptic, personal prescriptions (insulin/inhalers)</div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <input type="checkbox" class="form-check-input me-2">
+            <div>
+              <strong>LED Torch & Extra Batteries</strong>
+              <div class="text-muted" style="font-size: 0.75rem;">Heavy-duty waterproof flashlight with spares</div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <input type="checkbox" class="form-check-input me-2">
+            <div>
+              <strong>Important Documents Pouch</strong>
+              <div class="text-muted" style="font-size: 0.75rem;">ID, insurance, deed papers in sealed waterproof pouch</div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <input type="checkbox" class="form-check-input me-2">
+            <div>
+              <strong>Ready-to-Eat Non-Perishable Food</strong>
+              <div class="text-muted" style="font-size: 0.75rem;">Energy bars, biscuits, canned food, dry fruits</div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <input type="checkbox" class="form-check-input me-2">
+            <div>
+              <strong>Power Bank & USB Cables</strong>
+              <div class="text-muted" style="font-size: 0.75rem;">20,000mAh charged power bank for phone comms</div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <input type="checkbox" class="form-check-input me-2">
+            <div>
+              <strong>Emergency Whistle & Multi-Tool</strong>
+              <div class="text-muted" style="font-size: 0.75rem;">Signal whistle to attract rescue searchers</div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <input type="checkbox" class="form-check-input me-2">
+            <div>
+              <strong>Cash in Small Notes</strong>
+              <div class="text-muted" style="font-size: 0.75rem;">ATMs & digital payments fail during power outages</div>
+            </div>
+          </div>
+
+          <div class="checklist-item">
+            <input type="checkbox" class="form-check-input me-2">
+            <div>
+              <strong>N95 Masks & Hand Sanitizer</strong>
+              <div class="text-muted" style="font-size: 0.75rem;">Dust, smoke, and hygiene protection in crowded shelters</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

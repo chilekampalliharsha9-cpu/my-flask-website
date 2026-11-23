@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% block title %}Emergency Help Central & SOS - Smart Disaster System{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Large SOS Hero Card -->
+  <div class="card card-custom bg-danger text-white p-5 text-center mb-5 shadow-lg border-0" style="background: linear-gradient(135deg, #b91c1c 0%, #dc2626 50%, #991b1b 100%);">
+    <div class="py-3">
+      <span class="badge bg-white text-danger px-3 py-2 rounded-pill fw-bold mb-3 fs-6">
+        <i class="bi bi-broadcast text-danger me-1"></i> INSTANT EMERGENCY DISPATCH
+      </span>
+      <h1 class="display-4 fw-bold mb-3">Are You In Immediate Danger?</h1>
+      <p class="lead mx-auto mb-4" style="max-width: 650px;">
+        Pressing the SOS button transmits your high-accuracy GPS coordinates immediately to national response centers and notifies your emergency contacts.
+      </p>
+
+      <div class="d-flex justify-content-center mb-3">
+        <button class="btn btn-light btn-lg text-danger fw-bold rounded-pill px-5 py-3 fs-3 shadow sos-emergency-btn" style="letter-spacing: 0.05em;">
+          <i class="bi bi-exclamation-octagon-fill text-danger me-2"></i> ACTIVATE SOS NOW
+        </button>
+      </div>
+      <small class="text-white-50">Requires location permission. Direct emergency helplines are available below.</small>
+    </div>
+  </div>
+
+  <!-- 24/7 National Emergency Helplines Grid -->
+  <div class="mb-5">
+    <h3 class="fw-bold mb-3"><i class="bi bi-telephone-fill text-danger me-2"></i> 24/7 Emergency Helplines (India)</h3>
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <div class="card card-custom p-4 text-center h-100 border-start border-4 border-danger">
+          <div class="fs-1 fw-bold text-danger mb-1">112</div>
+          <h6 class="fw-bold mb-1">National Emergency</h6>
+          <p class="text-muted small mb-3">All-in-one emergency response service</p>
+          <a href="tel:112" class="btn btn-danger btn-sm rounded-pill fw-bold mt-auto"><i class="bi bi-telephone-fill"></i> Call 112</a>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card card-custom p-4 text-center h-100 border-start border-4 border-primary">
+          <div class="fs-1 fw-bold text-primary mb-1">108</div>
+          <h6 class="fw-bold mb-1">Medical Ambulance</h6>
+          <p class="text-muted small mb-3">Trauma, medical emergency & paramedic transport</p>
+          <a href="tel:108" class="btn btn-primary btn-sm rounded-pill fw-bold mt-auto"><i class="bi bi-telephone-fill"></i> Call 108</a>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card card-custom p-4 text-center h-100 border-start border-4 border-warning">
+          <div class="fs-1 fw-bold text-warning mb-1">101</div>
+          <h6 class="fw-bold mb-1">Fire & Rescue</h6>
+          <p class="text-muted small mb-3">Fire, building collapse, water rescue</p>
+          <a href="tel:101" class="btn btn-warning text-dark btn-sm rounded-pill fw-bold mt-auto"><i class="bi bi-telephone-fill"></i> Call 101</a>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card card-custom p-4 text-center h-100 border-start border-4 border-dark">
+          <div class="fs-1 fw-bold text-dark mb-1">100</div>
+          <h6 class="fw-bold mb-1">Police Control</h6>
+          <p class="text-muted small mb-3">Law enforcement and security escort</p>
+          <a href="tel:100" class="btn btn-dark btn-sm rounded-pill fw-bold mt-auto"><i class="bi bi-telephone-fill"></i> Call 100</a>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card card-custom p-4 text-center h-100 border-start border-4 border-success">
+          <div class="fs-2 fw-bold text-success mb-1">1078</div>
+          <h6 class="fw-bold mb-1">NDMA Disaster Helpline</h6>
+          <p class="text-muted small mb-3">National Disaster Management Authority</p>
+          <a href="tel:1078" class="btn btn-success btn-sm rounded-pill fw-bold mt-auto"><i class="bi bi-telephone-fill"></i> Call 1078</a>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card card-custom p-4 text-center h-100 border-start border-4 border-info">
+          <div class="fs-2 fw-bold text-info mb-1">1070</div>
+          <h6 class="fw-bold mb-1">State Relief Control</h6>
+          <p class="text-muted small mb-3">State Disaster Management Room</p>
+          <a href="tel:1070" class="btn btn-info btn-sm rounded-pill fw-bold mt-auto"><i class="bi bi-telephone-fill"></i> Call 1070</a>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card card-custom p-4 text-center h-100 border-start border-4 border-secondary">
+          <div class="fs-2 fw-bold text-secondary mb-1">1091</div>
+          <h6 class="fw-bold mb-1">Women Helpline</h6>
+          <p class="text-muted small mb-3">Women emergency & distress assistance</p>
+          <a href="tel:1091" class="btn btn-secondary btn-sm rounded-pill fw-bold mt-auto"><i class="bi bi-telephone-fill"></i> Call 1091</a>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card card-custom p-4 text-center h-100 border-start border-4 border-danger">
+          <div class="fs-2 fw-bold text-danger mb-1">1098</div>
+          <h6 class="fw-bold mb-1">Childline India</h6>
+          <p class="text-muted small mb-3">Child protection during disasters</p>
+          <a href="tel:1098" class="btn btn-danger btn-sm rounded-pill fw-bold mt-auto"><i class="bi bi-telephone-fill"></i> Call 1098</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specialized Rescue Request & First Aid Section -->
+  <div class="row g-4 mb-5">
+    <div class="col-lg-6">
+      <div class="card card-custom p-4 h-100 border-start border-4 border-primary">
+        <h4 class="fw-bold mb-2"><i class="bi bi-life-preserver text-primary me-2"></i> Request Specialized Rescue Team</h4>
+        <p class="text-muted small mb-4">Are you or family members stranded in a flooded home, collapsed structure, or medical emergency zone? File an operational rescue request with coordinates.</p>
+        <div class="d-flex flex-column gap-2 mt-auto">
+          <a href="{{ url_for('main.request_rescue') }}" class="btn btn-primary btn-lg rounded-pill fw-bold">
+            <i class="bi bi-send-check-fill me-2"></i> Submit Rescue Request Form
+          </a>
+          <a href="{{ url_for('main.shelters') }}" class="btn btn-outline-success rounded-pill">
+            <i class="bi bi-shield-shaded me-1"></i> Locate Nearest Safe Shelter
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card card-custom p-4 h-100">
+        <h4 class="fw-bold mb-3"><i class="bi bi-bandaid-fill text-danger me-2"></i> Quick First-Aid Protocols</h4>
+        
+        <div class="accordion accordion-flush" id="firstAidAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#fa1">
+                Severe Bleeding Control
+              </button>
+            </h2>
+            <div id="fa1" class="accordion-collapse collapse" data-bs-parent="#firstAidAccordion">
+              <div class="accordion-body small text-muted">
+                Apply direct firm pressure to the wound with a clean cloth or bandage. Keep the injured limb elevated above heart level if possible. Do not remove embedded objects.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#fa2">
+                CPR (Cardiopulmonary Resuscitation)
+              </button>
+            </h2>
+            <div id="fa2" class="accordion-collapse collapse" data-bs-parent="#firstAidAccordion">
+              <div class="accordion-body small text-muted">
+                Place hands in the center of the chest. Push hard and fast at a rate of 100-120 beats per minute (to the rhythm of 'Stayin Alive'). Allow full chest recoil.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#fa3">
+                Burn & Scald Treatment
+              </button>
+            </h2>
+            <div id="fa3" class="accordion-collapse collapse" data-bs-parent="#firstAidAccordion">
+              <div class="accordion-body small text-muted">
+                Cool the burn under cold running water for at least 10-15 minutes. Cover loosely with sterile plastic wrap or clean dressing. Never apply ice, butter, or oil.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#fa4">
+                Electric Shock Safety
+              </button>
+            </h2>
+            <div id="fa4" class="accordion-collapse collapse" data-bs-parent="#firstAidAccordion">
+              <div class="accordion-body small text-muted">
+                Do NOT touch the victim while they are in contact with electrical source. Turn off the main circuit breaker. Use a dry wooden stick to separate victim from wire.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

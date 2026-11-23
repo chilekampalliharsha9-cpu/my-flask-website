@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Disaster Safety Evacuation — Offline Mode</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .mobile-nav-bar {
+      background: #07111f;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-gateway {
+      background: rgba(0, 180, 216, 0.2);
+      border: 1px solid #00b4d8;
+      color: #00b4d8;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-nav-bar">
+    <a href="index.html" class="btn-gateway">← Server Gateway</a>
+    <span style="font-size: 12px; color: #00e676; font-weight: 700;">⚡ STANDALONE GPS MODE</span>
+  </div>
+
+  <div id="app">
+    <header>
+      <h1>Disaster Safety — Evacuation Optimizer</h1>
+      <div class="controls">
+        <button id="locateBtn">Get My Location</button>
+        <button id="routeBtn" disabled>Route to Nearest Safe Place</button>
+        <button id="sosBtn" class="sos">SOS / Share Location</button>
+        <button id="adminBtn" class="admin-toggle">Admin Dashboard</button>
+        <div class="manual-loc">
+          <input id="testLat" placeholder="lat" size="8" />
+          <input id="testLon" placeholder="lon" size="8" />
+          <button id="setTestBtn">Set Test Location</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <aside id="panel">
+        <h2>Status</h2>
+        <div id="status">Press "Get My Location" to start.</div>
+        <div id="alertBanner" role="status" aria-live="assertive"></div>
+
+        <h3>Hazard Check</h3>
+        <div id="hazard">—</div>
+
+        <h3>Nearby Safe Places</h3>
+        <ul id="places"></ul>
+
+        <h3>Categories</h3>
+        <div id="legend" class="legend">
+          <label class="legend-item"><input type="checkbox" data-cat="shelter" checked /> Shelter</label>
+          <label class="legend-item"><input type="checkbox" data-cat="hospital" checked /> Hospital</label>
+          <label class="legend-item"><input type="checkbox" data-cat="police" checked /> Police</label>
+          <label class="legend-item"><input type="checkbox" data-cat="fire_station" checked /> Fire Station</label>
+          <label class="legend-item"><input type="checkbox" data-cat="school" checked /> School</label>
+          <label class="legend-item"><input type="checkbox" data-cat="food" checked /> Food (restaurant/cafe)</label>
+          <label class="legend-item"><input type="checkbox" data-cat="bus" checked /> Bus Stops/Stations</label>
+          <label class="legend-item"><input type="checkbox" data-cat="airport" checked /> Airport</label>
+        </div>
+
+        <h3>Precautions</h3>
+        <div id="precautions">—</div>
+
+        <div id="adminDashboard" class="admin-dashboard hidden">
+          <h2>Admin Dashboard</h2>
+          <div class="admin-row"><span>Approx active users:</span><strong id="activeUsersCount">—</strong></div>
+          <div class="admin-row"><span>Visits this browser:</span><strong id="visitCount">—</strong></div>
+          <div class="admin-row"><span>Last refresh:</span><strong id="adminRefreshTime">—</strong></div>
+          <button id="adminRefreshBtn">Refresh Dashboard</button>
+          <h3>Updates</h3>
+          <div id="updateList" class="update-list"><em>Loading update history...</em></div>
+        </div>
+
+        <h3>Emergency</h3>
+        <div id="emergency">Call 112 (India emergency number)</div>
+      </aside>
+
+      <section id="map"></section>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', ()=>{
+        navigator.serviceWorker.register('sw.js').then(()=>console.log('SW registered')).catch(e=>console.warn('SW failed',e));
+      });
+    }
+  </script>
+</body>
+</html>
