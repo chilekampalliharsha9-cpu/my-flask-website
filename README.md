@@ -88,6 +88,16 @@ Open your browser and navigate to:
 👉 **Public Citizen Portal:** `http://localhost:5000`
 👉 **Admin Command Center:** `http://localhost:5000/admin/login`
 
+### Deploy a public demo for the mobile app
+
+The APK needs a publicly reachable HTTPS backend; `10.0.2.2` and `localhost` only refer to a local computer or Android emulator. This repository includes a Render Blueprint for a free demo deployment:
+
+1. Open [Deploy this repository on Render](https://render.com/deploy?repo=https://github.com/chilekampalliharsha9-cpu/my-flask-website) and authorize Render to access the repository.
+2. Deploy the `smart-disaster-ops` service and wait for its health check to pass.
+3. Copy the service's public `https://...onrender.com` address into the APK's service address field.
+
+The free demo uses SQLite and local file storage, which may be reset when the service restarts or is redeployed, and the service may sleep when idle. Do not rely on this demo for real emergency operations or durable user data. Production use requires persistent database and file storage, backups, and an appropriately reliable hosting plan.
+
 ---
 
 ## 🔐 Accounts and deployment secrets
